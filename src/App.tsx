@@ -4,6 +4,7 @@ import {
   Routes,
 } from 'react-router-dom'
 
+import Cart from './components/carrinho/cart/Cart'
 import Cadastro from './pages/cadastro/Cadastro'
 import Login from './pages/login/Login'
 import DeletarProduto from './pages/produtos/DeletarProduto'
@@ -65,6 +66,11 @@ function App() {
         <Route
           path="/produtos/:id"
           element={<ProdutoDetalhe />}
+        />
+
+        <Route
+          path="/carrinho"
+          element={<Cart />}
         />
       </Route>
 
