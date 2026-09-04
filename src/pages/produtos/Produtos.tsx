@@ -1,4 +1,4 @@
-import { ArrowRightIcon, ClockIcon, PackageIcon, PencilSimpleIcon, PlusIcon, SignOutIcon, TagIcon, TrashIcon,WarningCircleIcon, } from '@phosphor-icons/react'
+import { ArrowRightIcon, ClockIcon, LeafIcon, PackageIcon, PencilSimpleIcon, PlusIcon, SignOutIcon, TagIcon, TrashIcon,WarningCircleIcon, } from '@phosphor-icons/react'
 import axios from 'axios'
 import { useCallback, useContext, useEffect, useMemo, useState, } from 'react'
 import { Link, useLocation, useNavigate, } from 'react-router-dom'
@@ -313,17 +313,31 @@ function Produtos() {
             </p>
           </div>
 
-          <Link
-            to="/produtos/cadastrar"
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-button bg-primary px-5 font-headline font-bold text-white transition hover:bg-primary-dark lg:w-auto"
-          >
-            <PlusIcon
-              size={20}
-              weight="bold"
-            />
+          <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto">
+            <Link
+              to="/produtos/saudaveis"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-button border border-primary px-5 font-headline font-bold text-primary transition hover:bg-primary-soft lg:w-auto"
+            >
+              <LeafIcon
+                size={20}
+                weight="bold"
+              />
 
-            Cadastrar produto
-          </Link>
+              Opções saudáveis
+            </Link>
+
+            <Link
+              to="/produtos/cadastrar"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-button bg-primary px-5 font-headline font-bold text-white transition hover:bg-primary-dark lg:w-auto"
+            >
+              <PlusIcon
+                size={20}
+                weight="bold"
+              />
+
+              Cadastrar produto
+            </Link>
+          </div>
         </div>
 
         <div className="mt-6">
