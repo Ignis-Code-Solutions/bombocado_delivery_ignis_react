@@ -6,7 +6,6 @@ import {
   PackageIcon,
   PencilSimpleIcon,
   PlusIcon,
-  SignOutIcon,
   TagIcon,
   TrashIcon,
   WarningCircleIcon,
@@ -279,10 +278,6 @@ function Produtos() {
               onClick={sair}
               className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-button border border-outline px-3 text-sm font-semibold text-ink-soft transition hover:border-primary hover:bg-primary-soft hover:text-primary"
             >
-              <SignOutIcon
-                size={18}
-                weight="bold"
-              />
 
               <span className="hidden sm:inline">
                 Sair
