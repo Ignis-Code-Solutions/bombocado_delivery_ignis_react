@@ -1,110 +1,105 @@
-import { GithubLogoIcon, HeartIcon, LeafIcon } from '@phosphor-icons/react'
+import {
+  GithubLogoIcon,
+  HeartIcon,
+} from '@phosphor-icons/react'
+
 import { Link } from 'react-router-dom'
 
 function Footer() {
-  const anoAtual =
-    new Date().getFullYear()
+  const anoAtual = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-outline/40 bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-3">
+    <footer className="mt-auto bg-[#241812] text-white">
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        <div className="flex flex-col gap-6 py-7 md:flex-row md:items-center md:justify-between">
+
+          {/* Marca */}
           <div>
             <Link
               to="/produtos"
-              className="font-headline text-2xl font-extrabold text-primary-dark"
+              className="font-headline text-2xl font-black"
             >
-              BOM
+              <span className="text-white">
+                BOM
+              </span>
+
               <span className="text-primary">
                 bocado
               </span>
             </Link>
 
-            <p className="mt-3 max-w-sm text-sm leading-6 text-ink-soft">
-              Conectando alimentos,
-              oportunidades e pessoas de
-              forma simples, acessível e
-              consciente.
+            <p className="mt-1 text-sm text-white/60">
+              Alimentos, oportunidades e consumo consciente.
             </p>
           </div>
 
-          <div>
-            <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-ink">
-              Navegação
-            </h2>
+          {/* Navegação */}
+          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-white/70">
 
-            <div className="mt-4 flex flex-col gap-3">
-              <Link
-                to="/produtos"
-                className="w-fit text-sm text-ink-soft transition hover:text-primary"
-              >
-                Produtos
-              </Link>
+            <Link
+              to="/produtos"
+              className="transition hover:text-primary"
+            >
+              Produtos
+            </Link>
 
-              <Link
-                to="/produtos/saudaveis"
-                className="flex w-fit items-center gap-2 text-sm text-ink-soft transition hover:text-primary"
-              >
-                <LeafIcon
-                  size={16}
-                />
+            <Link
+              to="/produtos/saudaveis"
+              className="transition hover:text-primary"
+            >
+              Saudáveis
+            </Link>
 
-                Opções saudáveis
-              </Link>
-
-              <Link
-                to="/produtos/cadastrar"
-                className="w-fit text-sm text-ink-soft transition hover:text-primary"
-              >
-                Cadastrar produto
-              </Link>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-ink">
-              Projeto
-            </h2>
-
-            <p className="mt-4 text-sm leading-6 text-ink-soft">
-              Projeto Integrador desenvolvido
-              como parte da formação Full Stack
-              da Generation Brasil.
-            </p>
+            <Link
+              to="/produtos/cadastrar"
+              className="transition hover:text-primary"
+            >
+              Cadastrar
+            </Link>
 
             <a
               href="https://github.com/Ignis-Code-Solutions/bombocado_delivery_ignis_react"
               target="_blank"
               rel="noreferrer"
-              className="mt-4 flex w-fit items-center gap-2 text-sm font-bold text-primary transition hover:text-primary-dark"
+              className="flex items-center gap-1.5 transition hover:text-primary"
             >
               <GithubLogoIcon
-                size={19}
+                size={18}
                 weight="bold"
               />
 
-              Ver projeto no GitHub
+              GitHub
             </a>
-          </div>
+
+          </nav>
+
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 border-t border-outline/40 pt-5 text-xs text-ink-muted sm:flex-row sm:items-center sm:justify-between">
+        {/* Linha inferior */}
+        <div className="flex flex-col gap-2 border-t border-white/10 py-4 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
+
           <p>
-            © {anoAtual} BOMbocado.
-            Todos os direitos reservados.
+            © {anoAtual} BOMbocado · Ignis Code Solutions
           </p>
 
           <p className="flex items-center gap-1">
-            Feito com
+            Desenvolvido com
+
             <HeartIcon
-              size={15}
+              size={14}
               weight="fill"
               className="text-primary"
             />
-            pela equipe Ignis Code Solutions.
+
+            pela equipe.
           </p>
+
         </div>
+
       </div>
+
     </footer>
   )
 }

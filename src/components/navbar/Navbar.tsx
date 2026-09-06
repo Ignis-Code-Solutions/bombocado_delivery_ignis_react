@@ -1,18 +1,27 @@
-import { LeafIcon, ListIcon, PackageIcon, PlusIcon, SignOutIcon, UserIcon, XIcon } from '@phosphor-icons/react'
+import {
+  LeafIcon,
+  ListIcon,
+  PackageIcon,
+  PlusIcon,
+  SignOutIcon,
+  UserIcon,
+  XIcon,
+} from '@phosphor-icons/react'
+
 import { useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import {
+  Link,
+  NavLink,
+  useNavigate,
+} from 'react-router-dom'
+
 import { useAuth } from '../../contexts/AuthContext'
 
 function Navbar() {
   const navigate = useNavigate()
+  const { usuario, logout } = useAuth()
 
-  const {
-    usuario,
-    logout,
-  } = useAuth()
-
-  const [menuAberto, setMenuAberto] =
-    useState(false)
+  const [menuAberto, setMenuAberto] = useState(false)
 
   function sair() {
     logout()
@@ -22,84 +31,85 @@ function Navbar() {
     })
   }
 
+  function fecharMenu() {
+    setMenuAberto(false)
+  }
+
   return (
-    <header className="sticky top-0 z-50 border-b border-outline/40 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 border-b border-[#f0e4df] bg-white">
+      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
         {/* Logo */}
         <Link
           to="/produtos"
-          className="shrink-0 font-headline text-2xl font-extrabold text-primary-dark sm:text-3xl"
+          onClick={fecharMenu}
+          className="flex shrink-0 items-center gap-2"
         >
-          BOM
-          <span className="text-primary">
-            bocado
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-soft">
+            <LeafIcon
+              size={17}
+              weight="fill"
+              className="text-primary"
+            />
+          </div>
+
+          <span className="font-headline text-xl font-extrabold tracking-tight text-[#291a14]">
+            BOM
+            <span className="text-primary">
+              bocado
+            </span>
           </span>
         </Link>
 
         {/* Navegação Desktop */}
-        <nav className="hidden items-center gap-1 lg:flex">
-        <NavLink
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex">
+
+          <NavLink
             to="/produtos"
             end
-            onClick={() => setMenuAberto(false)}
             className={({ isActive }) =>
-                `flex items-center gap-3 rounded-button px-4 py-3 text-sm font-semibold ${
+              `flex items-center gap-1.5 text-[13px] font-semibold transition ${
                 isActive
-                    ? 'bg-primary-soft text-primary'
-                    : 'text-ink-soft hover:bg-surface'
-                }`
+                  ? 'text-primary'
+                  : 'text-[#5f514b] hover:text-primary'
+              }`
             }
-            >
-            <PackageIcon size={20} />
+          >
+            <PackageIcon
+              size={15}
+              weight="bold"
+            />
+
             Produtos
-        </NavLink>
+          </NavLink>
 
           <NavLink
             to="/produtos/saudaveis"
-            className={({
-              isActive,
-            }) =>
-              `flex h-10 items-center gap-2 rounded-button px-4 text-sm font-semibold transition ${
+            className={({ isActive }) =>
+              `flex items-center gap-1.5 text-[13px] font-semibold transition ${
                 isActive
-                  ? 'bg-primary-soft text-primary'
-                  : 'text-ink-soft hover:bg-surface hover:text-primary'
+                  ? 'text-primary'
+                  : 'text-[#5f514b] hover:text-primary'
               }`
             }
           >
             <LeafIcon
-              size={18}
+              size={15}
               weight="bold"
             />
 
-            Opções saudáveis
+            Saudáveis
           </NavLink>
 
-          <NavLink
-            to="/produtos/cadastrar"
-            className={({
-              isActive,
-            }) =>
-              `flex h-10 items-center gap-2 rounded-button px-4 text-sm font-semibold transition ${
-                isActive
-                  ? 'bg-primary-soft text-primary'
-                  : 'text-ink-soft hover:bg-surface hover:text-primary'
-              }`
-            }
-          >
-            <PlusIcon
-              size={18}
-              weight="bold"
-            />
-
-            Cadastrar produto
-          </NavLink>
         </nav>
 
-        {/* Usuário Desktop */}
-        <div className="hidden items-center gap-3 lg:flex">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-primary-soft text-primary">
+        {/* Área direita Desktop */}
+        <div className="hidden items-center gap-2 lg:flex">
+
+          {/* Usuário */}
+          <div className="mr-1 flex items-center gap-2">
+
+            <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-primary-soft text-primary">
               {usuario?.imagem ? (
                 <img
                   src={usuario.imagem}
@@ -108,77 +118,88 @@ function Navbar() {
                 />
               ) : (
                 <UserIcon
-                  size={19}
+                  size={16}
                   weight="bold"
                 />
               )}
             </div>
 
-            <div className="max-w-32">
-              <p className="truncate text-sm font-bold text-ink">
-                {usuario?.nome ||
-                  'Usuário'}
+            <div className="hidden xl:block">
+              <p className="max-w-24 truncate text-xs font-bold text-[#291a14]">
+                {usuario?.nome || 'Usuário'}
               </p>
-
-              {usuario?.tipo && (
-                <p className="truncate text-[10px] font-semibold uppercase tracking-wide text-ink-muted">
-                  {usuario.tipo}
-                </p>
-              )}
             </div>
+
           </div>
 
+          {/* Sair */}
           <button
             type="button"
             onClick={sair}
-            title="Sair"
-            className="flex h-10 w-10 items-center justify-center rounded-button border border-outline text-ink-muted transition hover:border-primary hover:bg-primary-soft hover:text-primary"
+            className="flex h-9 items-center gap-1.5 rounded-lg border border-[#eadbd5] bg-white px-3 text-xs font-semibold text-[#5f514b] transition hover:border-primary hover:text-primary"
           >
             <SignOutIcon
-              size={19}
+              size={15}
               weight="bold"
             />
+
+            Sair
           </button>
+
+          {/* CTA */}
+          <Link
+            to="/produtos/cadastrar"
+            className="flex h-9 items-center gap-1.5 rounded-lg bg-primary px-4 text-xs font-bold text-white shadow-sm transition hover:brightness-95"
+          >
+            <PlusIcon
+              size={15}
+              weight="bold"
+            />
+
+            Cadastrar
+          </Link>
+
         </div>
 
-        {/* Mobile */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <button
-            type="button"
-            onClick={() =>
-              setMenuAberto(
-                !menuAberto,
-              )
-            }
-            aria-label={
-              menuAberto
-                ? 'Fechar menu'
-                : 'Abrir menu'
-            }
-            aria-expanded={menuAberto}
-            className="flex h-10 w-10 items-center justify-center rounded-button border border-outline text-ink transition hover:border-primary hover:text-primary"
-          >
-            {menuAberto ? (
-              <XIcon
-                size={22}
-                weight="bold"
-              />
-            ) : (
-              <ListIcon
-                size={22}
-                weight="bold"
-              />
-            )}
-          </button>
-        </div>
+        {/* Botão Mobile */}
+        <button
+          type="button"
+          onClick={() =>
+            setMenuAberto((menu) => !menu)
+          }
+          aria-label={
+            menuAberto
+              ? 'Fechar menu'
+              : 'Abrir menu'
+          }
+          aria-expanded={menuAberto}
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#eadbd5] text-[#291a14] lg:hidden"
+        >
+          {menuAberto ? (
+            <XIcon
+              size={21}
+              weight="bold"
+            />
+          ) : (
+            <ListIcon
+              size={21}
+              weight="bold"
+            />
+          )}
+        </button>
+
       </div>
 
       {/* Menu Mobile */}
       {menuAberto && (
-        <div className="border-t border-outline/40 bg-white lg:hidden">
+        <div className="border-t border-[#f0e4df] bg-white lg:hidden">
+
           <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
-            <div className="mb-4 flex items-center gap-3 rounded-button bg-surface p-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary-soft text-primary">
+
+            {/* Usuário */}
+            <div className="mb-3 flex items-center gap-3 rounded-xl bg-[#fff8f5] p-3">
+
+              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary-soft text-primary">
                 {usuario?.imagem ? (
                   <img
                     src={usuario.imagem}
@@ -187,42 +208,43 @@ function Navbar() {
                   />
                 ) : (
                   <UserIcon
-                    size={20}
+                    size={19}
                     weight="bold"
                   />
                 )}
               </div>
 
-              <div className="min-w-0">
-                <p className="truncate text-sm font-bold">
-                  {usuario?.nome ||
-                    'Usuário'}
+              <div>
+                <p className="text-sm font-bold text-[#291a14]">
+                  {usuario?.nome || 'Usuário'}
                 </p>
 
                 {usuario?.tipo && (
-                  <p className="text-xs text-ink-muted">
+                  <p className="text-xs text-[#8a7770]">
                     {usuario.tipo}
                   </p>
                 )}
               </div>
+
             </div>
 
             <nav className="flex flex-col gap-1">
+
               <NavLink
                 to="/produtos"
                 end
-                className={({
-                  isActive,
-                }) =>
-                  `flex items-center gap-3 rounded-button px-4 py-3 text-sm font-semibold ${
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
                     isActive
                       ? 'bg-primary-soft text-primary'
-                      : 'text-ink-soft hover:bg-surface'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
                   }`
                 }
               >
                 <PackageIcon
-                  size={20}
+                  size={19}
+                  weight="bold"
                 />
 
                 Produtos
@@ -230,57 +252,51 @@ function Navbar() {
 
               <NavLink
                 to="/produtos/saudaveis"
-                className={({
-                  isActive,
-                }) =>
-                  `flex items-center gap-3 rounded-button px-4 py-3 text-sm font-semibold ${
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
                     isActive
                       ? 'bg-primary-soft text-primary'
-                      : 'text-ink-soft hover:bg-surface'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
                   }`
                 }
               >
                 <LeafIcon
-                  size={20}
+                  size={19}
+                  weight="bold"
                 />
 
                 Opções saudáveis
               </NavLink>
 
-              <NavLink
+              <Link
                 to="/produtos/cadastrar"
-                className={({
-                  isActive,
-                }) =>
-                  `flex items-center gap-3 rounded-button px-4 py-3 text-sm font-semibold ${
-                    isActive
-                      ? 'bg-primary-soft text-primary'
-                      : 'text-ink-soft hover:bg-surface'
-                  }`
-                }
+                onClick={fecharMenu}
+                className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-bold text-white"
               >
                 <PlusIcon
-                  size={20}
+                  size={18}
+                  weight="bold"
                 />
 
                 Cadastrar produto
-              </NavLink>
-
-              <div className="my-2 h-px bg-outline/40" />
+              </Link>
 
               <button
                 type="button"
                 onClick={sair}
-                className="flex items-center gap-3 rounded-button px-4 py-3 text-left text-sm font-semibold text-error transition hover:bg-error-soft"
+                className="mt-1 flex items-center justify-center gap-2 rounded-lg border border-[#eadbd5] px-4 py-3 text-sm font-semibold text-[#5f514b]"
               >
                 <SignOutIcon
-                  size={20}
+                  size={18}
                   weight="bold"
                 />
 
                 Sair
               </button>
+
             </nav>
+
           </div>
         </div>
       )}

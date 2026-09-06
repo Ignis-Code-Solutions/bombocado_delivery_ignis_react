@@ -42,7 +42,6 @@ function Produtos() {
   }
 
   const {
-    usuario,
     token,
     isAuthenticated,
     logout,
@@ -205,14 +204,6 @@ function Produtos() {
       )
     }, [busca, produtos])
 
-  function sair() {
-    logout()
-
-    navigate('/login', {
-      replace: true,
-    })
-  }
-
   function formatarPreco(
     preco: string,
   ) {
@@ -249,44 +240,6 @@ function Produtos() {
 
   return (
     <main className="min-h-screen bg-surface">
-      <header className="sticky top-0 z-30 border-b border-outline/40 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-          <Link
-            to="/produtos"
-            className="shrink-0 font-headline text-2xl font-extrabold text-primary-dark sm:text-3xl"
-          >
-            BOM
-            <span className="text-primary">
-              bocado
-            </span>
-          </Link>
-
-          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-            <div className="hidden min-w-0 text-right sm:block">
-              <p className="text-[11px] text-ink-muted">
-                Olá,
-              </p>
-
-              <p className="max-w-36 truncate text-sm font-bold text-ink lg:max-w-52">
-                {usuario?.nome ||
-                  'usuário'}
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={sair}
-              className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-button border border-outline px-3 text-sm font-semibold text-ink-soft transition hover:border-primary hover:bg-primary-soft hover:text-primary"
-            >
-
-              <span className="hidden sm:inline">
-                Sair
-              </span>
-            </button>
-          </div>
-        </div>
-      </header>
-
       <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
         {produtoSalvo && (
           <div
