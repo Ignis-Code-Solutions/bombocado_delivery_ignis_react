@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Intro from './components/intro/Intro'
+import Layout from './components/layout/Layout'
 import Cadastro from './pages/cadastro/Cadastro'
 import Login from './pages/login/Login'
 import DeletarProduto from './pages/produtos/DeletarProduto'
@@ -46,16 +47,18 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={
-          <Navigate to="/login" replace /> } />
+          <Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
       <Route element={<ProtectedRoute />} >
-        <Route path="/produtos" element={<Produtos />} />
-        <Route path="/produtos/saudaveis" element={<ProdutosSaudaveis />} />
-        <Route path="/produtos/cadastrar" element={<FormProduto />} />
-        <Route path="/produtos/editar/:id" element={<FormProduto />} />
-        <Route path="/produtos/deletar/:id" element={ <DeletarProduto /> } />
-        <Route path="/produtos/:id" element={ <ProdutoDetalhe /> } />
+        <Route element={<Layout />} >
+          <Route path="/produtos" element={<Produtos />} />
+          <Route path="/produtos/saudaveis" element={<ProdutosSaudaveis />} />
+          <Route path="/produtos/cadastrar" element={<FormProduto />} />
+          <Route path="/produtos/editar/:id" element={<FormProduto />} />
+          <Route path="/produtos/deletar/:id" element={<DeletarProduto />} />
+          <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
+        </Route>
       </Route>
       <Route path="*" element={
           <Navigate to="/login" replace />
