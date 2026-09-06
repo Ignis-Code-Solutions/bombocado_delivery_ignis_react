@@ -20,6 +20,7 @@ import { useAuth } from '../../contexts/AuthContext'
 function Navbar() {
   const navigate = useNavigate()
   const { usuario, logout } = useAuth()
+  const isAdmin = usuario?.tipo?.toUpperCase() === 'ADMIN'
 
   const [menuAberto, setMenuAberto] = useState(false)
 
@@ -147,17 +148,19 @@ function Navbar() {
           </button>
 
           {/* CTA */}
-          <Link
-            to="/produtos/cadastrar"
-            className="flex h-9 items-center gap-1.5 rounded-lg bg-primary px-4 text-xs font-bold text-white shadow-sm transition hover:brightness-95"
-          >
-            <PlusIcon
-              size={15}
-              weight="bold"
-            />
+          {isAdmin && (
+            <Link
+              to="/produtos/cadastrar"
+              className="flex h-9 items-center gap-1.5 rounded-lg bg-primary px-4 text-xs font-bold text-white shadow-sm transition hover:brightness-95"
+            >
+              <PlusIcon
+                size={15}
+                weight="bold"
+              />
 
-            Cadastrar
-          </Link>
+              Cadastrar
+            </Link>
+          )}
 
         </div>
 
@@ -269,18 +272,19 @@ function Navbar() {
                 Opções saudáveis
               </NavLink>
 
-              <Link
-                to="/produtos/cadastrar"
-                onClick={fecharMenu}
-                className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-bold text-white"
-              >
-                <PlusIcon
-                  size={18}
-                  weight="bold"
-                />
+              {isAdmin && (
+                <Link
+                  to="/produtos/cadastrar"
+                  className="flex h-9 items-center gap-1.5 rounded-lg bg-primary px-4 text-xs font-bold text-white shadow-sm transition hover:brightness-95"
+                >
+                  <PlusIcon
+                    size={15}
+                    weight="bold"
+                  />
 
-                Cadastrar produto
-              </Link>
+                  Cadastrar
+                </Link>
+              )}
 
               <button
                 type="button"

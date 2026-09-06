@@ -42,10 +42,13 @@ function Produtos() {
   }
 
   const {
+    usuario,
     token,
     isAuthenticated,
     logout,
   } = authContext
+
+  const isAdmin = usuario?.tipo?.toUpperCase() === 'ADMIN'
 
   const [produtos, setProdutos] =
     useState<Produto[]>([])
@@ -297,6 +300,7 @@ function Produtos() {
                 Opções saudáveis
               </Link>
 
+              {isAdmin && (
               <Link
                 to="/produtos/cadastrar"
                 className="flex h-12 items-center justify-center gap-2 rounded-button bg-primary px-5 font-headline text-sm font-bold text-white transition hover:bg-primary-dark"
@@ -308,6 +312,7 @@ function Produtos() {
 
                 Cadastrar produto
               </Link>
+              )}
             </div>
           </div>
 
@@ -559,39 +564,43 @@ function Produtos() {
                           </Link>
                         </div>
 
-                        <div className="mt-4 flex gap-2 border-t border-outline/40 pt-4">
-                          <Link
-                            to={`/produtos/editar/${produto.id}`}
-                            aria-label={`Editar ${produto.nome}`}
-                            title="Editar produto"
-                            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-button bg-primary-soft px-3 text-sm font-bold text-primary transition hover:bg-primary hover:text-white"
-                          >
-                            <PencilSimpleIcon
-                              size={18}
-                              weight="bold"
-                            />
+                        {isAdmin && (
+                          <div className="mt-4 flex gap-2 border-t border-outline/40 pt-4">
 
-                            <span className="hidden min-[430px]:inline sm:inline">
-                              Editar
-                            </span>
-                          </Link>
+                            <Link
+                              to={`/produtos/editar/${produto.id}`}
+                              aria-label={`Editar ${produto.nome}`}
+                              title="Editar produto"
+                              className="flex h-10 flex-1 items-center justify-center gap-2 rounded-button bg-primary-soft px-3 text-sm font-bold text-primary transition hover:bg-primary hover:text-white"
+                            >
+                              <PencilSimpleIcon
+                                size={18}
+                                weight="bold"
+                              />
 
-                          <Link
-                            to={`/produtos/deletar/${produto.id}`}
-                            aria-label={`Excluir ${produto.nome}`}
-                            title="Excluir produto"
-                            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-button bg-error-soft px-3 text-sm font-bold text-error transition hover:bg-error hover:text-white"
-                          >
-                            <TrashIcon
-                              size={18}
-                              weight="bold"
-                            />
+                              <span className="hidden min-[430px]:inline sm:inline">
+                                Editar
+                              </span>
+                            </Link>
 
-                            <span className="hidden min-[430px]:inline sm:inline">
-                              Excluir
-                            </span>
-                          </Link>
-                        </div>
+                            <Link
+                              to={`/produtos/deletar/${produto.id}`}
+                              aria-label={`Excluir ${produto.nome}`}
+                              title="Excluir produto"
+                              className="flex h-10 flex-1 items-center justify-center gap-2 rounded-button bg-error-soft px-3 text-sm font-bold text-error transition hover:bg-error hover:text-white"
+                            >
+                              <TrashIcon
+                                size={18}
+                                weight="bold"
+                              />
+
+                              <span className="hidden min-[430px]:inline sm:inline">
+                                Excluir
+                              </span>
+                            </Link>
+
+                          </div>
+                        )}
                       </div>
                     </div>
                   </article>
