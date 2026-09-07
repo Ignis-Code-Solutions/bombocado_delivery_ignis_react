@@ -11,6 +11,7 @@ import Produtos from './pages/produtos/Produtos'
 import ProdutosSaudaveis from './pages/produtos/ProdutosSaudaveis'
 import ProtectedRoute from './routes/ProtectedRoute'
 import AdminRoute from './routes/AdminRoute'
+import Home from './pages/home/Home'
 
 const INTRO_KEY =
   '@BOMbocado:intro'
@@ -53,36 +54,14 @@ function App() {
       <Route path="/cadastro" element={<Cadastro />} />
       <Route element={<ProtectedRoute />}>
       <Route element={<Layout />}>
-        <Route
-          path="/produtos"
-          element={<Produtos />}
-        />
-
-        <Route
-          path="/produtos/saudaveis"
-          element={<ProdutosSaudaveis />}
-        />
-
-        <Route
-          path="/produtos/:id"
-          element={<ProdutoDetalhe />}
-        />
-        
+      <Route path="/home" element={<Home />} />
+        <Route path="/produtos" element={<Produtos />} />
+        <Route path="/produtos/saudaveis" element={<ProdutosSaudaveis />} />
+        <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
         <Route element={<AdminRoute />}>
-          <Route
-            path="/produtos/cadastrar"
-            element={<FormProduto />}
-          />
-
-          <Route
-            path="/produtos/editar/:id"
-            element={<FormProduto />}
-          />
-
-          <Route
-            path="/produtos/deletar/:id"
-            element={<DeletarProduto />}
-          />
+          <Route path="/produtos/cadastrar" element={<FormProduto />} />
+          <Route path="/produtos/editar/:id" element={<FormProduto />} />
+          <Route path="/produtos/deletar/:id" element={<DeletarProduto />} />
         </Route>
       </Route>
     </Route>

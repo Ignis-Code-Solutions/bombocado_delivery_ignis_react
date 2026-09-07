@@ -22,6 +22,7 @@ import {
   Link,
   useLocation,
   useNavigate,
+  useSearchParams,
 } from 'react-router-dom'
 
 import { AuthContext } from '../../contexts/AuthContext'
@@ -31,6 +32,12 @@ import { buscar } from '../../services/Service'
 function Produtos() {
   const navigate = useNavigate()
   const location = useLocation()
+
+  const [searchParams] =
+  useSearchParams()
+
+  const buscaInicial =
+  searchParams.get('busca') ?? ''
 
   const authContext =
     useContext(AuthContext)
@@ -60,7 +67,7 @@ function Produtos() {
     useState('')
 
   const [busca, setBusca] =
-    useState('')
+  useState(buscaInicial)
 
   const state = location.state as
     | {

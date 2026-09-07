@@ -42,7 +42,7 @@ function Navbar() {
 
         {/* Logo */}
         <Link
-          to="/produtos"
+          to="/home"
           onClick={fecharMenu}
           className="flex shrink-0 items-center gap-2"
         >
@@ -64,6 +64,19 @@ function Navbar() {
 
         {/* Navegação Desktop */}
         <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex">
+
+        <NavLink
+          to="/home"
+          className={({ isActive }) =>
+            `text-[13px] font-semibold transition ${
+              isActive
+                ? 'text-primary'
+                : 'text-[#5f514b] hover:text-primary'
+            }`
+          }
+        >
+          Início
+        </NavLink>
 
           <NavLink
             to="/produtos"

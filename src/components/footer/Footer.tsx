@@ -52,13 +52,6 @@ function Footer() {
               Saudáveis
             </Link>
 
-            <Link
-              to="/produtos/cadastrar"
-              className="transition hover:text-primary"
-            >
-              Cadastrar
-            </Link>
-
             <a
               href="https://github.com/Ignis-Code-Solutions/bombocado_delivery_ignis_react"
               target="_blank"
