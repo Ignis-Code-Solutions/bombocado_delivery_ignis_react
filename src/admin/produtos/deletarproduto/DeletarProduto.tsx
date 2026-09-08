@@ -1,6 +1,6 @@
-
 import { useState } from 'react'
 import { deletar } from '../../../services/Service'
+import { useAuth } from '../../../contexts/AuthContext'
 
 interface Produto {
   id: number
@@ -23,6 +23,7 @@ function DeletarProduto({
 }: DeletarProdutoProps) {
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
+  const { token } = useAuth()
 
   if (!aberto || !produto) {
     return null
@@ -33,7 +34,7 @@ function DeletarProduto({
     setCarregando(true)
 
     try {
-      await deletar(`/produtos/${produto.id}`)
+      await deletar(`/produtos/${produto.id}`, token)
 
       atualizarProdutos()
       fechar()

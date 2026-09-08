@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { atualizar, buscar } from '../../../services/Service'
 import type Produto from '../../../models/Produto'
 import type Categoria from '../../../models/Categoria'
+import { useAuth } from '../../../contexts/AuthContext'
 
 interface EditarProdutoProps {
   aberto: boolean
@@ -28,23 +29,37 @@ function EditarProduto({
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
 
+  const { token } = useAuth()
+
   useEffect(() => {
     if (produto) {
       setNome(produto.nome)
       setDescricao(produto.descricao)
-      setPreco(produto.preco)
+      setPreco(String(produto.preco))
       setImagem(produto.imagem || '')
-      setTempoEntrega(produto.tempoEntrega ? String(produto.tempoEntrega) : '')
+      setTempoEntrega(
+        produto.tempoEntrega
+          ? String(produto.tempoEntrega)
+          : ''
+      )
       setNutriscore(produto.nutriscore || '')
-      setDataValidade(produto.dataValidade ? produto.dataValidade.substring(0, 10) : '')
-      setCategoria(produto.categoria ? String(produto.categoria.id) : '')
+      setDataValidade(
+        produto.dataValidade
+          ? produto.dataValidade.substring(0, 10)
+          : ''
+      )
+      setCategoria(
+        produto.categoria
+          ? String(produto.categoria.id)
+          : ''
+      )
       setErro('')
     }
   }, [produto])
 
   useEffect(() => {
-    if (aberto) {
-      buscar<any>('/categorias')
+    if (aberto && token) {
+      buscar<any>('/categorias', token)
         .then((resposta) => {
           if (Array.isArray(resposta)) {
             setCategorias(resposta)
@@ -60,36 +75,53 @@ function EditarProduto({
           setCategorias([])
         })
     }
-  }, [aberto])
+  }, [aberto, token])
 
   if (!aberto || !produto) {
     return null
   }
 
-  const salvar = async (event: React.FormEvent<HTMLFormElement>) => {
+  const salvar = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault()
+
     setErro('')
     setCarregando(true)
 
     try {
-      await atualizar('/produtos', {
-        id: produto.id,
-        nome,
-        descricao,
-        preco: Number(preco),
-        imagem,
-        tempoEntrega: tempoEntrega ? Number(tempoEntrega) : null,
-        nutriscore: nutriscore || null,
-        dataValidade,
-        categoria: {
-          id: Number(categoria)
-        }
-      })
+      await atualizar(
+        '/produtos',
+        {
+          id: produto.id,
+          nome,
+          descricao,
+          preco: Number(preco),
+          imagem,
+          tempoEntrega: tempoEntrega
+            ? Number(tempoEntrega)
+            : null,
+          nutriscore: nutriscore || null,
+          dataValidade,
+          categoria: {
+            id: Number(categoria)
+          }
+        },
+        token
+      )
 
       atualizarProdutos()
       fechar()
-    } catch {
-      setErro('Não foi possível atualizar o produto.')
+    } catch (error: any) {
+      console.error(
+        'Erro ao atualizar produto:',
+        error
+      )
+
+      setErro(
+        error?.response?.data?.message ||
+        'Não foi possível atualizar o produto.'
+      )
     } finally {
       setCarregando(false)
     }
@@ -98,8 +130,12 @@ function EditarProduto({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
       <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl">
+
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-zinc-800">Editar produto</h2>
+          <h2 className="text-xl font-bold text-zinc-800">
+            Editar produto
+          </h2>
+
           <button
             type="button"
             onClick={fechar}
@@ -109,11 +145,16 @@ function EditarProduto({
           </button>
         </div>
 
-        <form onSubmit={salvar} className="space-y-4">
+        <form
+          onSubmit={salvar}
+          className="space-y-4"
+        >
+
           <div>
             <label className="mb-1 block text-sm font-semibold text-zinc-700">
               Nome
             </label>
+
             <input
               type="text"
               value={nome}
@@ -127,6 +168,7 @@ function EditarProduto({
             <label className="mb-1 block text-sm font-semibold text-zinc-700">
               Descrição
             </label>
+
             <textarea
               value={descricao}
               onChange={(e) => setDescricao(e.target.value)}
@@ -137,10 +179,12 @@ function EditarProduto({
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+
             <div>
               <label className="mb-1 block text-sm font-semibold text-zinc-700">
                 Preço
               </label>
+
               <input
                 type="number"
                 step="0.01"
@@ -155,19 +199,24 @@ function EditarProduto({
               <label className="mb-1 block text-sm font-semibold text-zinc-700">
                 Tempo de entrega
               </label>
+
               <input
                 type="number"
                 value={tempoEntrega}
-                onChange={(e) => setTempoEntrega(e.target.value)}
+                onChange={(e) =>
+                  setTempoEntrega(e.target.value)
+                }
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
               />
             </div>
+
           </div>
 
           <div>
             <label className="mb-1 block text-sm font-semibold text-zinc-700">
               Imagem
             </label>
+
             <input
               type="text"
               value={imagem}
@@ -178,14 +227,18 @@ function EditarProduto({
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+
             <div>
               <label className="mb-1 block text-sm font-semibold text-zinc-700">
                 Nutriscore
               </label>
+
               <input
                 type="text"
                 value={nutriscore}
-                onChange={(e) => setNutriscore(e.target.value)}
+                onChange={(e) =>
+                  setNutriscore(e.target.value)
+                }
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
               />
             </div>
@@ -194,10 +247,13 @@ function EditarProduto({
               <label className="mb-1 block text-sm font-semibold text-zinc-700">
                 Validade
               </label>
+
               <input
                 type="date"
                 value={dataValidade}
-                onChange={(e) => setDataValidade(e.target.value)}
+                onChange={(e) =>
+                  setDataValidade(e.target.value)
+                }
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
                 required
               />
@@ -207,20 +263,30 @@ function EditarProduto({
               <label className="mb-1 block text-sm font-semibold text-zinc-700">
                 Categoria
               </label>
+
               <select
                 value={categoria}
-                onChange={(e) => setCategoria(e.target.value)}
+                onChange={(e) =>
+                  setCategoria(e.target.value)
+                }
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
                 required
               >
-                <option value="">Selecione</option>
+                <option value="">
+                  Selecione
+                </option>
+
                 {categorias.map((item) => (
-                  <option key={item.id} value={item.id}>
+                  <option
+                    key={item.id}
+                    value={item.id}
+                  >
                     {item.nome}
                   </option>
                 ))}
               </select>
             </div>
+
           </div>
 
           {erro && (
@@ -230,10 +296,12 @@ function EditarProduto({
           )}
 
           <div className="flex justify-end gap-3 pt-2">
+
             <button
               type="button"
               onClick={fechar}
-              className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-600 transition hover:bg-zinc-50"
+              disabled={carregando}
+              className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-600 transition hover:bg-zinc-50 disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -243,9 +311,13 @@ function EditarProduto({
               disabled={carregando}
               className="rounded-lg bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:opacity-50"
             >
-              {carregando ? 'Salvando...' : 'Salvar'}
+              {carregando
+                ? 'Salvando...'
+                : 'Salvar'}
             </button>
+
           </div>
+
         </form>
       </div>
     </div>

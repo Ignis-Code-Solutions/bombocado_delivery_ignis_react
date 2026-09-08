@@ -51,11 +51,7 @@ function Navbar() {
           className="flex shrink-0 items-center gap-2"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-soft">
-            <LeafIcon
-              size={17}
-              weight="fill"
-              className="text-primary"
-            />
+            <img src="/content.png" alt="" />
           </div>
 
           <span className="font-headline text-xl font-extrabold tracking-tight text-[#291a14]">
