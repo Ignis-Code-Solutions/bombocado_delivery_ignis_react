@@ -1,7 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 
-import { createContext, useContext, useMemo, useState,
-type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react'
 import type UsuarioLogin from '../models/UsuarioLogin'
 import { login as loginService } from '../services/Service'
 
@@ -18,7 +23,9 @@ interface AuthContextData {
   usuario: UsuarioAutenticado | null
   token: string
   isAuthenticated: boolean
-  login: (credentials: LoginCredentials) => Promise<void>
+  login: (
+    credentials: LoginCredentials,
+  ) => Promise<UsuarioAutenticado>
   logout: () => void
 }
 
@@ -34,7 +41,8 @@ function recuperarSessao(): UsuarioAutenticado | null {
   }
 
   try {
-    const usuarioSalvo = JSON.parse(sessaoSalva) as UsuarioAutenticado
+    const usuarioSalvo =
+      JSON.parse(sessaoSalva) as UsuarioAutenticado
 
     if (!usuarioSalvo.token) {
       localStorage.removeItem(STORAGE_KEY)
@@ -48,23 +56,30 @@ function recuperarSessao(): UsuarioAutenticado | null {
   }
 }
 
-export const AuthContext = createContext<AuthContextData | undefined>(
-  undefined,
-)
+export const AuthContext = createContext<
+  AuthContextData | undefined
+>(undefined)
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [usuario, setUsuario] = useState<UsuarioAutenticado | null>(
-    recuperarSessao,
-  )
+export function AuthProvider({
+  children,
+}: AuthProviderProps) {
+  const [usuario, setUsuario] =
+    useState<UsuarioAutenticado | null>(
+      recuperarSessao,
+    )
 
   async function login({
     usuario: email,
     senha,
-  }: LoginCredentials): Promise<void> {
-    const resposta = await loginService<UsuarioLogin>('/usuarios/logar', {
-      usuario: email,
-      senha,
-    })
+  }: LoginCredentials): Promise<UsuarioAutenticado> {
+    const resposta =
+      await loginService<UsuarioLogin>(
+        '/usuarios/logar',
+        {
+          usuario: email,
+          senha,
+        },
+      )
 
     const sessao: UsuarioAutenticado = {
       id: resposta.id,
@@ -77,8 +92,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
       token: resposta.token,
     }
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sessao))
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(sessao),
+    )
+
     setUsuario(sessao)
+
+    return sessao
   }
 
   function logout(): void {
@@ -100,14 +121,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [usuario, token, isAuthenticated],
   )
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth(): AuthContextData {
   const context = useContext(AuthContext)
 
   if (!context) {
-    throw new Error('useAuth deve ser utilizado dentro de um AuthProvider.')
+    throw new Error(
+      'useAuth deve ser utilizado dentro de um AuthProvider.',
+    )
   }
 
   return context
