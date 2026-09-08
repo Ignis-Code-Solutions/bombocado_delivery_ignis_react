@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Intro from './components/intro/Intro'
 import Layout from './components/layout/Layout'
+import Cart from './components/carrinho/cart/Cart'
 import Cadastro from './pages/cadastro/Cadastro'
 import Login from './pages/login/Login'
 import DeletarProduto from './pages/produtos/DeletarProduto'
@@ -14,43 +15,25 @@ import ProtectedRoute from './routes/ProtectedRoute'
 import AdminRoute from './routes/AdminRoute'
 import Home from './pages/home/Home'
 
-const INTRO_KEY =
-  '@BOMbocado:intro'
+const INTRO_KEY = '@BOMbocado:intro'
 
 function App() {
-  const [mostrarIntro, setMostrarIntro] =
-    useState(() => {
-      return (
-        sessionStorage.getItem(
-          INTRO_KEY,
-        ) !== 'true'
-      )
-    })
+  const [mostrarIntro, setMostrarIntro] = useState(() => {
+    return sessionStorage.getItem(INTRO_KEY) !== 'true'
+  })
 
-  const finalizarIntro =
-    useCallback(() => {
-      sessionStorage.setItem(
-        INTRO_KEY,
-        'true',
-      )
-
-      setMostrarIntro(false)
-    }, [])
+  const finalizarIntro = useCallback(() => {
+    sessionStorage.setItem(INTRO_KEY, 'true')
+    setMostrarIntro(false)
+  }, [])
 
   if (mostrarIntro) {
-    return (
-      <Intro
-        onComplete={
-          finalizarIntro
-        }
-      />
-    )
+    return <Intro onComplete={finalizarIntro} />
   }
 
   return (
     <Routes>
-      <Route path="/" element={
-          <Navigate to="/login" replace />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
 
@@ -61,6 +44,7 @@ function App() {
           <Route path="/produtos" element={<Produtos />} />
           <Route path="/produtos/saudaveis" element={<ProdutosSaudaveis />} />
           <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
+          <Route path="/carrinho" element={<Cart />} />
 
           <Route element={<AdminRoute />}>
             <Route path="/produtos/cadastrar" element={<FormProduto />} />
@@ -70,10 +54,7 @@ function App() {
         </Route>
       </Route>
 
-      <Route path="*" element={
-          <Navigate to="/login" replace />
-        }
-      />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   )
 }

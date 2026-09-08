@@ -11,6 +11,7 @@ import {
 import axios from 'axios'
 import {
   useCallback,
+  useContext,
   useEffect,
   useState,
 } from 'react'
@@ -22,6 +23,7 @@ import {
 
 import Nutriscore from '../../components/nutriscore/Nutriscore'
 import { useAuth } from '../../contexts/AuthContext'
+import { CartContext } from '../../contexts/CartContext'
 import type Produto from '../../models/Produto'
 import { buscar } from '../../services/Service'
 
@@ -34,6 +36,8 @@ function ProdutoDetalhe() {
     isAuthenticated,
     logout,
   } = useAuth()
+
+  const { adicionarProduto } = useContext(CartContext)
 
   const [produto, setProduto] =
     useState<Produto | null>(null)
@@ -484,16 +488,13 @@ function ProdutoDetalhe() {
             <div className="mt-6 rounded-card bg-white p-4 shadow-card sm:p-5">
               <button
                 type="button"
-                disabled
-                title="A integração com o carrinho será realizada pela funcionalidade responsável pelo carrinho."
-                className="flex h-12 w-full cursor-not-allowed items-center justify-center rounded-button bg-primary px-6 font-headline font-bold text-white opacity-60"
+                onClick={() =>
+                  adicionarProduto(produto)
+                }
+                className="flex h-12 w-full items-center justify-center rounded-button bg-primary px-6 font-headline font-bold text-white transition hover:bg-primary-dark"
               >
                 Adicionar ao carrinho
               </button>
-
-              <p className="mt-2 text-center text-xs leading-5 text-ink-muted">
-                Integração com o carrinho em desenvolvimento.
-              </p>
             </div>
           </div>
         </div>

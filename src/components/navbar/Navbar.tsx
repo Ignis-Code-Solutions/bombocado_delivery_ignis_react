@@ -4,12 +4,13 @@ import {
   ListIcon,
   PackageIcon,
   PlusIcon,
+  ShoppingCartIcon,
   SignOutIcon,
   UserIcon,
   XIcon,
 } from '@phosphor-icons/react'
 
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import {
   Link,
   NavLink,
@@ -17,10 +18,12 @@ import {
 } from 'react-router-dom'
 
 import { useAuth } from '../../contexts/AuthContext'
+import { CartContext } from '../../contexts/CartContext'
 
 function Navbar() {
   const navigate = useNavigate()
   const { usuario, logout } = useAuth()
+  const { quantidadeItems } = useContext(CartContext)
   const isAdmin = usuario?.tipo?.toUpperCase() === 'ADMIN'
 
   const [menuAberto, setMenuAberto] = useState(false)
@@ -138,6 +141,24 @@ function Navbar() {
 
         {/* Área direita Desktop */}
         <div className="hidden items-center gap-2 lg:flex">
+
+          {/* Carrinho */}
+          <Link
+            to="/carrinho"
+            aria-label="Ver carrinho"
+            className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-[#eadbd5] bg-white text-[#5f514b] transition hover:border-primary hover:text-primary"
+          >
+            <ShoppingCartIcon
+              size={17}
+              weight="bold"
+            />
+
+            {quantidadeItems > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
+                {quantidadeItems}
+              </span>
+            )}
+          </Link>
 
           {/* Usuário */}
           <div className="mr-1 flex items-center gap-2">
@@ -340,6 +361,30 @@ function Navbar() {
                 />
 
                 Sobre nós
+              </NavLink>
+
+              <NavLink
+                to="/carrinho"
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-primary-soft text-primary'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
+                  }`
+                }
+              >
+                <ShoppingCartIcon
+                  size={19}
+                  weight="bold"
+                />
+
+                Carrinho
+                {quantidadeItems > 0 && (
+                  <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-bold text-white">
+                    {quantidadeItems}
+                  </span>
+                )}
               </NavLink>
 
               {isAdmin && (
