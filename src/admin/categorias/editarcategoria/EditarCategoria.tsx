@@ -1,6 +1,6 @@
-
 import { useEffect, useState } from 'react'
 import { atualizar } from '../../../services/Service'
+import { useAuth } from '../../../contexts/AuthContext'
 
 interface Categoria {
   id: number
@@ -25,6 +25,7 @@ function EditarCategoria({
   const [descricao, setDescricao] = useState('')
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
+  const { token } = useAuth()
 
   useEffect(() => {
     if (categoria) {
@@ -48,7 +49,7 @@ function EditarCategoria({
         id: categoria.id,
         nome,
         descricao
-      })
+      }, token)
 
       atualizarCategorias()
       fechar()
