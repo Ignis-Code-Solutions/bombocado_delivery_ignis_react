@@ -68,58 +68,14 @@ function App() {
 
           {/* Área do administrador */}
         <Route element={<AdminRoute />}>
-          
-          <Route
-            path="/admin"
-            element={
-              <div className="flex min-h-screen">
-                <NavbarAdmin />
-
-                <main className="ml-60 flex-1">
-                  <HomeAdmin />
-                </main>
-              </div>
-            }
-          />
-
-          <Route
-            path="/admin/produtos"
-            element={
-              <div className="flex min-h-screen">
-                <NavbarAdmin />
-
-                <main className="ml-60 flex-1">
-                  <ProdutosAdmin />
-                </main>
-              </div>
-            }
-          />
-
-          <Route
-            path="/admin/categorias"
-            element={
-              <div className="flex min-h-screen">
-                <NavbarAdmin />
-
-                <main className="ml-60 flex-1">
-                  <CategoriasAdmin />
-                </main>
-              </div>
-            }
-          />
-
-          <Route
-            path="/admin/clientes"
-            element={
-              <div className="flex min-h-screen">
-                <NavbarAdmin />
-
-                <main className="ml-60 flex-1">
-                  <Clientes />
-                </main>
-              </div>
-            }
-          />
+          <Route path="/admin" element={<div className="flex min-h-screen">
+            <NavbarAdmin /><main className="ml-60 flex-1"><HomeAdmin /></main></div>}/>
+          <Route path="/admin/produtos" element={<div className="flex min-h-screen">
+                <NavbarAdmin /><main className="ml-60 flex-1"><ProdutosAdmin /></main></div>}/>
+          <Route path="/admin/categorias" element={<div className="flex min-h-screen">
+            <NavbarAdmin /><main className="ml-60 flex-1"><CategoriasAdmin /></main></div>}/>
+          <Route path="/admin/clientes" element={<div className="flex min-h-screen">
+            <NavbarAdmin /><main className="ml-60 flex-1"><Clientes /></main></div>}/>
       </Route>
 
       <Route path="*" element={
