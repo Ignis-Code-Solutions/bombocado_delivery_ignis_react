@@ -1,4 +1,5 @@
 import {
+  HouseIcon,
   InfoIcon,
   LeafIcon,
   ListIcon,
@@ -75,6 +76,7 @@ function Navbar() {
               }`
             }
           >
+          
             Início
           </NavLink>
 
@@ -97,23 +99,7 @@ function Navbar() {
             Produtos
           </NavLink>
 
-          <NavLink
-            to="/produtos/saudaveis"
-            className={({ isActive }) =>
-              `flex items-center gap-1.5 text-[13px] font-semibold transition ${
-                isActive
-                  ? 'text-primary'
-                  : 'text-[#5f514b] hover:text-primary'
-              }`
-            }
-          >
-            <LeafIcon
-              size={15}
-              weight="bold"
-            />
-
-            Saudáveis
-          </NavLink>
+          
 
           <NavLink
             to="/sobre-nos"
