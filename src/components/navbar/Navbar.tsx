@@ -138,23 +138,7 @@ function Navbar() {
         {/* Área direita Desktop */}
         <div className="hidden items-center gap-2 lg:flex">
 
-          {/* Carrinho */}
-          <Link
-            to="/carrinho"
-            aria-label="Ver carrinho"
-            className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-[#eadbd5] bg-white text-[#5f514b] transition hover:border-primary hover:text-primary"
-          >
-            <ShoppingCartIcon
-              size={17}
-              weight="bold"
-            />
-
-            {quantidadeItems > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
-                {quantidadeItems}
-              </span>
-            )}
-          </Link>
+          
 
           {/* Usuário */}
           <div className="mr-1 flex items-center gap-2">
@@ -180,6 +164,23 @@ function Navbar() {
               </p>
             </div>
 
+{/* Carrinho */}
+          <Link
+            to="/carrinho"
+            aria-label="Ver carrinho"
+            className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-[#eadbd5] bg-white text-[#5f514b] transition hover:border-primary hover:text-primary"
+          >
+            <ShoppingCartIcon
+              size={17}
+              weight="bold"
+            />
+
+            {quantidadeItems > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
+                {quantidadeItems}
+              </span>
+            )}
+          </Link>
           </div>
 
           {/* Sair */}
