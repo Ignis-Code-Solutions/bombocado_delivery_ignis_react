@@ -6,7 +6,6 @@ import {
   PackageIcon,
   PencilSimpleIcon,
   PlusIcon,
-  SignOutIcon,
   TagIcon,
   TrashIcon,
   WarningCircleIcon,
@@ -23,6 +22,7 @@ import {
   Link,
   useLocation,
   useNavigate,
+  useSearchParams,
 } from 'react-router-dom'
 
 import { AuthContext } from '../../contexts/AuthContext'
@@ -32,6 +32,12 @@ import { buscar } from '../../services/Service'
 function Produtos() {
   const navigate = useNavigate()
   const location = useLocation()
+
+  const [searchParams] =
+  useSearchParams()
+
+  const buscaInicial =
+  searchParams.get('busca') ?? ''
 
   const authContext =
     useContext(AuthContext)
@@ -49,6 +55,8 @@ function Produtos() {
     logout,
   } = authContext
 
+  const isAdmin = usuario?.tipo?.toUpperCase() === 'ADMIN'
+
   const [produtos, setProdutos] =
     useState<Produto[]>([])
 
@@ -59,7 +67,7 @@ function Produtos() {
     useState('')
 
   const [busca, setBusca] =
-    useState('')
+  useState(buscaInicial)
 
   const state = location.state as
     | {
@@ -206,14 +214,6 @@ function Produtos() {
       )
     }, [busca, produtos])
 
-  function sair() {
-    logout()
-
-    navigate('/login', {
-      replace: true,
-    })
-  }
-
   function formatarPreco(
     preco: string,
   ) {
@@ -250,48 +250,6 @@ function Produtos() {
 
   return (
     <main className="min-h-screen bg-surface">
-      <header className="sticky top-0 z-30 border-b border-outline/40 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-          <Link
-            to="/produtos"
-            className="shrink-0 font-headline text-2xl font-extrabold text-primary-dark sm:text-3xl"
-          >
-            BOM
-            <span className="text-primary">
-              bocado
-            </span>
-          </Link>
-
-          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-            <div className="hidden min-w-0 text-right sm:block">
-              <p className="text-[11px] text-ink-muted">
-                Olá,
-              </p>
-
-              <p className="max-w-36 truncate text-sm font-bold text-ink lg:max-w-52">
-                {usuario?.nome ||
-                  'usuário'}
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={sair}
-              className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-button border border-outline px-3 text-sm font-semibold text-ink-soft transition hover:border-primary hover:bg-primary-soft hover:text-primary"
-            >
-              <SignOutIcon
-                size={18}
-                weight="bold"
-              />
-
-              <span className="hidden sm:inline">
-                Sair
-              </span>
-            </button>
-          </div>
-        </div>
-      </header>
-
       <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
         {produtoSalvo && (
           <div
@@ -349,6 +307,7 @@ function Produtos() {
                 Opções saudáveis
               </Link>
 
+              {isAdmin && (
               <Link
                 to="/produtos/cadastrar"
                 className="flex h-12 items-center justify-center gap-2 rounded-button bg-primary px-5 font-headline text-sm font-bold text-white transition hover:bg-primary-dark"
@@ -360,6 +319,7 @@ function Produtos() {
 
                 Cadastrar produto
               </Link>
+              )}
             </div>
           </div>
 
@@ -611,39 +571,43 @@ function Produtos() {
                           </Link>
                         </div>
 
-                        <div className="mt-4 flex gap-2 border-t border-outline/40 pt-4">
-                          <Link
-                            to={`/produtos/editar/${produto.id}`}
-                            aria-label={`Editar ${produto.nome}`}
-                            title="Editar produto"
-                            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-button bg-primary-soft px-3 text-sm font-bold text-primary transition hover:bg-primary hover:text-white"
-                          >
-                            <PencilSimpleIcon
-                              size={18}
-                              weight="bold"
-                            />
+                        {isAdmin && (
+                          <div className="mt-4 flex gap-2 border-t border-outline/40 pt-4">
 
-                            <span className="hidden min-[430px]:inline sm:inline">
-                              Editar
-                            </span>
-                          </Link>
+                            <Link
+                              to={`/produtos/editar/${produto.id}`}
+                              aria-label={`Editar ${produto.nome}`}
+                              title="Editar produto"
+                              className="flex h-10 flex-1 items-center justify-center gap-2 rounded-button bg-primary-soft px-3 text-sm font-bold text-primary transition hover:bg-primary hover:text-white"
+                            >
+                              <PencilSimpleIcon
+                                size={18}
+                                weight="bold"
+                              />
 
-                          <Link
-                            to={`/produtos/deletar/${produto.id}`}
-                            aria-label={`Excluir ${produto.nome}`}
-                            title="Excluir produto"
-                            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-button bg-error-soft px-3 text-sm font-bold text-error transition hover:bg-error hover:text-white"
-                          >
-                            <TrashIcon
-                              size={18}
-                              weight="bold"
-                            />
+                              <span className="hidden min-[430px]:inline sm:inline">
+                                Editar
+                              </span>
+                            </Link>
 
-                            <span className="hidden min-[430px]:inline sm:inline">
-                              Excluir
-                            </span>
-                          </Link>
-                        </div>
+                            <Link
+                              to={`/produtos/deletar/${produto.id}`}
+                              aria-label={`Excluir ${produto.nome}`}
+                              title="Excluir produto"
+                              className="flex h-10 flex-1 items-center justify-center gap-2 rounded-button bg-error-soft px-3 text-sm font-bold text-error transition hover:bg-error hover:text-white"
+                            >
+                              <TrashIcon
+                                size={18}
+                                weight="bold"
+                              />
+
+                              <span className="hidden min-[430px]:inline sm:inline">
+                                Excluir
+                              </span>
+                            </Link>
+
+                          </div>
+                        )}
                       </div>
                     </div>
                   </article>

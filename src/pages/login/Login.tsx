@@ -102,7 +102,7 @@ function Login() {
 
       await login(formLogin)
 
-      navigate('/produtos')
+      navigate('/home')
     } catch (error) {
       console.error(error)
 
