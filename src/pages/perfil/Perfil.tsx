@@ -3,8 +3,10 @@ import {
   HouseIcon,
   IdentificationCardIcon,
   PhoneIcon,
+  ShieldCheckIcon,
   UserIcon,
 } from '@phosphor-icons/react'
+
 import type { ReactNode } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -16,65 +18,183 @@ function Perfil() {
   }
 
   return (
-    <main className="min-h-[70vh] bg-surface px-4 py-8 sm:px-6 lg:px-8">
-      <section className="mx-auto max-w-5xl">
-        <div className="overflow-hidden rounded-card bg-white shadow-card">
-          <div className="bg-primary px-6 py-8 sm:px-8">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/80">
-              Minha conta
-            </p>
-            <h1 className="mt-2 text-3xl font-extrabold text-white">
-              Meu perfil
-            </h1>
+    <main className="min-h-[calc(100vh-68px)] bg-[#fff8f6] px-4 py-10 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-6xl">
+
+        {/* Cabeçalho */}
+        <div className="mb-7">
+          <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-primary">
+            Minha conta
+          </span>
+
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-[#291a14] sm:text-4xl">
+            Meu perfil
+          </h1>
+
+          <p className="mt-2 max-w-xl text-sm leading-6 text-[#8a7770]">
+            Visualize suas informações pessoais e os dados cadastrados
+            na sua conta BOMbocado.
+          </p>
+        </div>
+
+        {/* Card principal */}
+        <div className="overflow-hidden rounded-[28px] border border-[#f0ded7] bg-white shadow-sm">
+
+          {/* Banner */}
+          <div className="relative h-32 overflow-hidden bg-primary sm:h-40">
+            <div className="absolute -right-12 -top-16 h-48 w-48 rounded-full bg-white/10" />
+
+            <div className="absolute right-20 top-10 h-24 w-24 rounded-full bg-white/10" />
+
+            <div className="absolute -bottom-20 left-1/3 h-40 w-40 rounded-full bg-white/10" />
           </div>
 
-          <div className="grid gap-8 p-6 sm:p-8 md:grid-cols-[220px_1fr]">
-            <div className="flex flex-col items-center text-center">
-              <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-primary-soft text-primary">
-                {usuario.imagem ? (
-                  <img
-                    src={usuario.imagem}
-                    alt={usuario.nome}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <UserIcon size={58} weight="duotone" />
-                )}
+          <div className="px-6 pb-8 sm:px-9">
+
+            {/* Avatar + identificação */}
+            <div className="-mt-16 flex flex-col items-center sm:-mt-14 sm:flex-row sm:items-end sm:gap-5">
+
+              <div className="relative">
+                <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-[5px] border-white bg-[#ffede2] text-primary shadow-md">
+                  {usuario.imagem ? (
+                    <img
+                      src={usuario.imagem}
+                      alt={usuario.nome}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <UserIcon
+                      size={55}
+                      weight="duotone"
+                    />
+                  )}
+                </div>
+
+                {/* Indicador */}
+                <div
+                  className="absolute bottom-2 right-2 h-5 w-5 rounded-full border-4 border-white bg-green-500"
+                  title="Usuário ativo"
+                />
               </div>
 
-              <h2 className="mt-4 text-xl font-extrabold">{usuario.nome}</h2>
+              <div className="mt-4 flex-1 text-center sm:mb-2 sm:mt-0 sm:text-left">
+                <h2 className="text-2xl font-extrabold text-[#291a14]">
+                  {usuario.nome}
+                </h2>
+
+                <p className="mt-1 text-sm text-[#8a7770]">
+                  {usuario.usuario}
+                </p>
+              </div>
 
               {usuario.tipo && (
-                <span className="mt-2 rounded-full bg-primary-soft px-3 py-1 text-xs font-bold uppercase text-primary-dark">
-                  {usuario.tipo}
-                </span>
+                <div className="mt-4 sm:mb-3 sm:mt-0">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ffede2] px-4 py-2 text-xs font-extrabold uppercase tracking-wide text-[#a73a00]">
+                    <ShieldCheckIcon
+                      size={16}
+                      weight="fill"
+                    />
+
+                    {usuario.tipo}
+                  </span>
+                </div>
               )}
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Info
-                icon={<IdentificationCardIcon size={21} weight="duotone" />}
-                label="Nome"
-                value={usuario.nome}
-              />
-              <Info
-                icon={<EnvelopeSimpleIcon size={21} weight="duotone" />}
-                label="E-mail"
-                value={usuario.usuario}
-              />
-              <Info
-                icon={<PhoneIcon size={21} weight="duotone" />}
-                label="Telefone"
-                value={usuario.telefone || 'Não informado'}
-              />
-              <Info
-                icon={<HouseIcon size={21} weight="duotone" />}
-                label="Endereço"
-                value={usuario.endereco || 'Não informado'}
-              />
+            {/* Divisor */}
+            <div className="my-8 h-px bg-[#f0e4df]" />
+
+            {/* Informações */}
+            <div>
+              <div className="mb-5">
+                <h3 className="text-lg font-extrabold text-[#291a14]">
+                  Informações pessoais
+                </h3>
+
+                <p className="mt-1 text-sm text-[#8a7770]">
+                  Dados associados à sua conta.
+                </p>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+
+                <Info
+                  icon={
+                    <IdentificationCardIcon
+                      size={22}
+                      weight="duotone"
+                    />
+                  }
+                  label="Nome completo"
+                  value={usuario.nome}
+                />
+
+                <Info
+                  icon={
+                    <EnvelopeSimpleIcon
+                      size={22}
+                      weight="duotone"
+                    />
+                  }
+                  label="E-mail"
+                  value={usuario.usuario}
+                />
+
+                <Info
+                  icon={
+                    <PhoneIcon
+                      size={22}
+                      weight="duotone"
+                    />
+                  }
+                  label="Telefone"
+                  value={
+                    usuario.telefone ||
+                    'Não informado'
+                  }
+                />
+
+                <Info
+                  icon={
+                    <HouseIcon
+                      size={22}
+                      weight="duotone"
+                    />
+                  }
+                  label="Endereço"
+                  value={
+                    usuario.endereco ||
+                    'Não informado'
+                  }
+                />
+
+              </div>
             </div>
+
+            {/* Rodapé do card */}
+            <div className="mt-8 flex items-center gap-3 rounded-2xl bg-[#fff8f5] px-4 py-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ffede2] text-primary">
+                <ShieldCheckIcon
+                  size={21}
+                  weight="duotone"
+                />
+              </div>
+
+              <div>
+                <p className="text-sm font-bold text-[#291a14]">
+                  Conta BOMbocado
+                </p>
+
+                <p className="mt-0.5 text-xs leading-5 text-[#8a7770]">
+                  Suas informações são utilizadas para identificar
+                  sua conta na plataforma.
+                </p>
+              </div>
+            </div>
+
           </div>
         </div>
+
       </section>
     </main>
   )
@@ -90,12 +210,26 @@ function Info({
   value: string
 }) {
   return (
-    <article className="rounded-2xl border border-outline/40 bg-surface p-4">
-      <div className="flex items-center gap-2 text-primary">
-        {icon}
-        <span className="text-xs font-bold uppercase tracking-wider">{label}</span>
+    <article className="group rounded-2xl border border-[#f0e4df] bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-[#ffb89a] hover:shadow-sm">
+
+      <div className="flex items-start gap-4">
+
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#ffede2] text-primary">
+          {icon}
+        </div>
+
+        <div className="min-w-0">
+          <span className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#9b8177]">
+            {label}
+          </span>
+
+          <p className="mt-1 break-words text-sm font-bold leading-6 text-[#291a14] sm:text-[15px]">
+            {value}
+          </p>
+        </div>
+
       </div>
-      <p className="mt-2 break-words text-sm font-semibold text-ink">{value}</p>
+
     </article>
   )
 }
