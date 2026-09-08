@@ -1,7 +1,6 @@
 import {
   ArrowRightIcon,
   ClockIcon,
-  LeafIcon,
   MagnifyingGlassIcon,
   PackageIcon,
   PencilSimpleIcon,
@@ -10,7 +9,9 @@ import {
   TrashIcon,
   WarningCircleIcon,
 } from '@phosphor-icons/react'
+
 import axios from 'axios'
+
 import {
   useCallback,
   useContext,
@@ -18,6 +19,7 @@ import {
   useMemo,
   useState,
 } from 'react'
+
 import {
   Link,
   useLocation,
@@ -26,18 +28,20 @@ import {
 } from 'react-router-dom'
 
 import { AuthContext } from '../../contexts/AuthContext'
+
+import type Categoria from '../../models/Categoria'
 import type Produto from '../../models/Produto'
+
 import { buscar } from '../../services/Service'
 
 function Produtos() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [searchParams] =
-  useSearchParams()
+  const [searchParams] = useSearchParams()
 
   const buscaInicial =
-  searchParams.get('busca') ?? ''
+    searchParams.get('busca') ?? ''
 
   const authContext =
     useContext(AuthContext)
@@ -55,7 +59,9 @@ function Produtos() {
     logout,
   } = authContext
 
-  const isAdmin = usuario?.tipo?.toUpperCase() === 'ADMIN'
+  const isAdmin =
+    usuario?.tipo?.toUpperCase() ===
+    'ADMIN'
 
   const [produtos, setProdutos] =
     useState<Produto[]>([])
@@ -67,7 +73,13 @@ function Produtos() {
     useState('')
 
   const [busca, setBusca] =
-  useState(buscaInicial)
+    useState(buscaInicial)
+
+  // FILTRO DE CATEGORIA
+  const [
+    categoriaSelecionada,
+    setCategoriaSelecionada,
+  ] = useState<number | null>(null)
 
   const state = location.state as
     | {
@@ -169,6 +181,40 @@ function Produtos() {
     navigate,
   ])
 
+  /*
+   * Pega as categorias existentes nos produtos
+   * e remove categorias repetidas.
+   */
+  const categorias = useMemo(() => {
+    const categoriasUnicas =
+      new Map<number, Categoria>()
+
+    produtos.forEach((produto) => {
+      if (produto.categoria) {
+        categoriasUnicas.set(
+          produto.categoria.id,
+          produto.categoria,
+        )
+      }
+    })
+
+    return Array.from(
+      categoriasUnicas.values(),
+    ).sort((categoriaA, categoriaB) =>
+      categoriaA.nome.localeCompare(
+        categoriaB.nome,
+        'pt-BR',
+      ),
+    )
+  }, [produtos])
+
+  /*
+   * FILTRO:
+   * - pesquisa por nome
+   * - pesquisa por descrição
+   * - pesquisa por categoria
+   * - botão de categoria
+   */
   const produtosFiltrados =
     useMemo(() => {
       const termo = busca
@@ -177,12 +223,18 @@ function Produtos() {
           'pt-BR',
         )
 
-      if (!termo) {
-        return produtos
-      }
-
       return produtos.filter(
         (produto) => {
+          const correspondeCategoria =
+            categoriaSelecionada ===
+              null ||
+            produto.categoria?.id ===
+              categoriaSelecionada
+
+          if (!termo) {
+            return correspondeCategoria
+          }
+
           const nome =
             produto.nome
               ?.toLocaleLowerCase(
@@ -201,18 +253,30 @@ function Produtos() {
                 'pt-BR',
               )
 
-          return (
-            nome?.includes(termo) ||
-            descricao?.includes(
-              termo,
-            ) ||
-            categoria?.includes(
-              termo,
+          const correspondeBusca =
+            Boolean(
+              nome?.includes(
+                termo,
+              ) ||
+                descricao?.includes(
+                  termo,
+                ) ||
+                categoria?.includes(
+                  termo,
+                ),
             )
+
+          return (
+            correspondeBusca &&
+            correspondeCategoria
           )
         },
       )
-    }, [busca, produtos])
+    }, [
+      busca,
+      produtos,
+      categoriaSelecionada,
+    ])
 
   function formatarPreco(
     preco: string,
@@ -295,34 +359,24 @@ function Produtos() {
             </div>
 
             <div className="grid w-full gap-3 sm:grid-cols-2 xl:w-auto">
-              <Link
-                to="/produtos/saudaveis"
-                className="flex h-12 items-center justify-center gap-2 rounded-button border border-primary px-5 font-headline text-sm font-bold text-primary transition hover:bg-primary-soft"
-              >
-                <LeafIcon
-                  size={20}
-                  weight="bold"
-                />
-
-                Opções saudáveis
-              </Link>
 
               {isAdmin && (
-              <Link
-                to="/produtos/cadastrar"
-                className="flex h-12 items-center justify-center gap-2 rounded-button bg-primary px-5 font-headline text-sm font-bold text-white transition hover:bg-primary-dark"
-              >
-                <PlusIcon
-                  size={20}
-                  weight="bold"
-                />
+                <Link
+                  to="/produtos/cadastrar"
+                  className="flex h-12 items-center justify-center gap-2 rounded-button bg-primary px-5 font-headline text-sm font-bold text-white transition hover:bg-primary-dark"
+                >
+                  <PlusIcon
+                    size={20}
+                    weight="bold"
+                  />
 
-                Cadastrar produto
-              </Link>
+                  Cadastrar produto
+                </Link>
               )}
             </div>
           </div>
 
+          {/* BUSCA */}
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative w-full sm:max-w-md">
               <label
@@ -367,8 +421,76 @@ function Produtos() {
                 </p>
               )}
           </div>
+
+          {/* FILTRO POR CATEGORIA */}
+          {!carregando &&
+            !erro &&
+            categorias.length >
+              0 && (
+              <div className="mt-5 border-t border-outline/40 pt-5">
+                <p className="mb-3 text-sm font-bold text-ink">
+                  Filtrar por categoria
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                  {/* TODAS */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCategoriaSelecionada(
+                        null,
+                      )
+                    }
+                    aria-pressed={
+                      categoriaSelecionada ===
+                      null
+                    }
+                    className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                      categoriaSelecionada ===
+                      null
+                        ? 'bg-primary text-white shadow-sm'
+                        : 'border border-outline bg-white text-ink-soft hover:border-primary hover:bg-primary-soft hover:text-primary'
+                    }`}
+                  >
+                    Todas
+                  </button>
+
+                  {/* CATEGORIAS */}
+                  {categorias.map(
+                    (categoria) => (
+                      <button
+                        key={
+                          categoria.id
+                        }
+                        type="button"
+                        onClick={() =>
+                          setCategoriaSelecionada(
+                            categoria.id,
+                          )
+                        }
+                        aria-pressed={
+                          categoriaSelecionada ===
+                          categoria.id
+                        }
+                        className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                          categoriaSelecionada ===
+                          categoria.id
+                            ? 'bg-primary text-white shadow-sm'
+                            : 'border border-outline bg-white text-ink-soft hover:border-primary hover:bg-primary-soft hover:text-primary'
+                        }`}
+                      >
+                        {
+                          categoria.nome
+                        }
+                      </button>
+                    ),
+                  )}
+                </div>
+              </div>
+            )}
         </div>
 
+        {/* CARREGANDO */}
         {carregando && (
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({
@@ -398,6 +520,7 @@ function Produtos() {
           </div>
         )}
 
+        {/* ERRO */}
         {!carregando &&
           erro && (
             <section className="mt-6 rounded-card bg-white p-8 text-center shadow-card sm:p-10">
@@ -429,6 +552,7 @@ function Produtos() {
             </section>
           )}
 
+        {/* NENHUM PRODUTO */}
         {!carregando &&
           !erro &&
           produtosFiltrados.length ===
@@ -447,13 +571,32 @@ function Produtos() {
               </h2>
 
               <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-ink-soft">
-                {busca
-                  ? 'Tente buscar por outro nome ou categoria.'
+                {busca ||
+                categoriaSelecionada !==
+                  null
+                  ? 'Tente buscar por outro nome ou selecionar outra categoria.'
                   : 'Ainda não existem produtos disponíveis.'}
               </p>
+
+              {categoriaSelecionada !==
+                null && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCategoriaSelecionada(
+                      null,
+                    )
+                  }
+                  className="mt-5 rounded-button border border-primary px-5 py-2.5 text-sm font-bold text-primary transition hover:bg-primary-soft"
+                >
+                  Mostrar todas as
+                  categorias
+                </button>
+              )}
             </section>
           )}
 
+        {/* PRODUTOS */}
         {!carregando &&
           !erro &&
           produtosFiltrados.length >
@@ -465,14 +608,19 @@ function Produtos() {
                     key={produto.id}
                     className="group flex min-w-0 flex-col overflow-hidden rounded-card bg-white shadow-card transition duration-200 hover:-translate-y-1 hover:shadow-card-hover"
                   >
+                    {/* IMAGEM */}
                     <Link
                       to={`/produtos/${produto.id}`}
                       className="relative block aspect-4/3 overflow-hidden bg-neutral-light"
                     >
                       {produto.imagem ? (
                         <img
-                          src={produto.imagem}
-                          alt={produto.nome}
+                          src={
+                            produto.imagem
+                          }
+                          alt={
+                            produto.nome
+                          }
                           className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                         />
                       ) : (
@@ -496,6 +644,7 @@ function Produtos() {
                       )}
                     </Link>
 
+                    {/* CONTEÚDO */}
                     <div className="flex flex-1 flex-col p-5">
                       <Link
                         to={`/produtos/${produto.id}`}
@@ -571,9 +720,9 @@ function Produtos() {
                           </Link>
                         </div>
 
+                        {/* AÇÕES DO ADMIN */}
                         {isAdmin && (
                           <div className="mt-4 flex gap-2 border-t border-outline/40 pt-4">
-
                             <Link
                               to={`/produtos/editar/${produto.id}`}
                               aria-label={`Editar ${produto.nome}`}
@@ -581,7 +730,9 @@ function Produtos() {
                               className="flex h-10 flex-1 items-center justify-center gap-2 rounded-button bg-primary-soft px-3 text-sm font-bold text-primary transition hover:bg-primary hover:text-white"
                             >
                               <PencilSimpleIcon
-                                size={18}
+                                size={
+                                  18
+                                }
                                 weight="bold"
                               />
 
@@ -597,7 +748,9 @@ function Produtos() {
                               className="flex h-10 flex-1 items-center justify-center gap-2 rounded-button bg-error-soft px-3 text-sm font-bold text-error transition hover:bg-error hover:text-white"
                             >
                               <TrashIcon
-                                size={18}
+                                size={
+                                  18
+                                }
                                 weight="bold"
                               />
 
@@ -605,7 +758,6 @@ function Produtos() {
                                 Excluir
                               </span>
                             </Link>
-
                           </div>
                         )}
                       </div>

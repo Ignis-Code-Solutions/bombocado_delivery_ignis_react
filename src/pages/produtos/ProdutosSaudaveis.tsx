@@ -260,13 +260,6 @@ function ProdutosSaudaveis() {
           </div>
         </div>
 
-        <div className="mt-5 rounded-button border border-outline/60 bg-white px-4 py-3 text-xs leading-5 text-ink-muted">
-          Esta seleção é uma adaptação no Front-end.
-          Atualmente o Backend não possui um endpoint
-          específico de recomendações saudáveis, então
-          o filtro utiliza o Nutriscore dos produtos reais.
-        </div>
-
         <div className="mt-6 rounded-card bg-white p-4 shadow-card sm:p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative w-full sm:max-w-md">
