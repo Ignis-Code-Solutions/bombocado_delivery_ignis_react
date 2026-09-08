@@ -9,6 +9,7 @@ import FormProduto from './pages/produtos/FormProduto'
 import ProdutoDetalhe from './pages/produtos/ProdutoDetalhe'
 import Produtos from './pages/produtos/Produtos'
 import ProdutosSaudaveis from './pages/produtos/ProdutosSaudaveis'
+import SobreNos from './pages/sobrenos/SobreNos'
 import ProtectedRoute from './routes/ProtectedRoute'
 import AdminRoute from './routes/AdminRoute'
 import Home from './pages/home/Home'
@@ -52,19 +53,23 @@ function App() {
           <Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
+
       <Route element={<ProtectedRoute />}>
-      <Route element={<Layout />}>
-      <Route path="/home" element={<Home />} />
-        <Route path="/produtos" element={<Produtos />} />
-        <Route path="/produtos/saudaveis" element={<ProdutosSaudaveis />} />
-        <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
-        <Route element={<AdminRoute />}>
-          <Route path="/produtos/cadastrar" element={<FormProduto />} />
-          <Route path="/produtos/editar/:id" element={<FormProduto />} />
-          <Route path="/produtos/deletar/:id" element={<DeletarProduto />} />
+        <Route element={<Layout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/sobre-nos" element={<SobreNos />} />
+          <Route path="/produtos" element={<Produtos />} />
+          <Route path="/produtos/saudaveis" element={<ProdutosSaudaveis />} />
+          <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
+
+          <Route element={<AdminRoute />}>
+            <Route path="/produtos/cadastrar" element={<FormProduto />} />
+            <Route path="/produtos/editar/:id" element={<FormProduto />} />
+            <Route path="/produtos/deletar/:id" element={<DeletarProduto />} />
+          </Route>
         </Route>
       </Route>
-    </Route>
+
       <Route path="*" element={
           <Navigate to="/login" replace />
         }

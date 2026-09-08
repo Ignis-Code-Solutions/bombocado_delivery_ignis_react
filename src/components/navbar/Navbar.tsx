@@ -1,4 +1,5 @@
 import {
+  InfoIcon,
   LeafIcon,
   ListIcon,
   PackageIcon,
@@ -65,18 +66,18 @@ function Navbar() {
         {/* Navegação Desktop */}
         <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex">
 
-        <NavLink
-          to="/home"
-          className={({ isActive }) =>
-            `text-[13px] font-semibold transition ${
-              isActive
-                ? 'text-primary'
-                : 'text-[#5f514b] hover:text-primary'
-            }`
-          }
-        >
-          Início
-        </NavLink>
+          <NavLink
+            to="/home"
+            className={({ isActive }) =>
+              `text-[13px] font-semibold transition ${
+                isActive
+                  ? 'text-primary'
+                  : 'text-[#5f514b] hover:text-primary'
+              }`
+            }
+          >
+            Início
+          </NavLink>
 
           <NavLink
             to="/produtos"
@@ -113,6 +114,24 @@ function Navbar() {
             />
 
             Saudáveis
+          </NavLink>
+
+          <NavLink
+            to="/sobre-nos"
+            className={({ isActive }) =>
+              `flex items-center gap-1.5 text-[13px] font-semibold transition ${
+                isActive
+                  ? 'text-primary'
+                  : 'text-[#5f514b] hover:text-primary'
+              }`
+            }
+          >
+            <InfoIcon
+              size={15}
+              weight="bold"
+            />
+
+            Sobre nós
           </NavLink>
 
         </nav>
@@ -247,6 +266,25 @@ function Navbar() {
             <nav className="flex flex-col gap-1">
 
               <NavLink
+                to="/home"
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-primary-soft text-primary'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
+                  }`
+                }
+              >
+                <LeafIcon
+                  size={19}
+                  weight="bold"
+                />
+
+                Início
+              </NavLink>
+
+              <NavLink
                 to="/produtos"
                 end
                 onClick={fecharMenu}
@@ -285,9 +323,29 @@ function Navbar() {
                 Opções saudáveis
               </NavLink>
 
+              <NavLink
+                to="/sobre-nos"
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-primary-soft text-primary'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
+                  }`
+                }
+              >
+                <InfoIcon
+                  size={19}
+                  weight="bold"
+                />
+
+                Sobre nós
+              </NavLink>
+
               {isAdmin && (
                 <Link
                   to="/produtos/cadastrar"
+                  onClick={fecharMenu}
                   className="flex h-9 items-center gap-1.5 rounded-lg bg-primary px-4 text-xs font-bold text-white shadow-sm transition hover:brightness-95"
                 >
                   <PlusIcon
