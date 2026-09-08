@@ -6,6 +6,7 @@ import {
   SignOutIcon,
   UserIcon,
   XIcon,
+  HeartIcon,
 } from '@phosphor-icons/react'
 
 import { useState } from 'react'
@@ -115,6 +116,17 @@ function Navbar() {
             Saudáveis
           </NavLink>
 
+          <NavLink
+            to="/solidario"
+            className={({ isActive }) =>
+              `flex items-center gap-1.5 text-[13px] font-semibold transition ${
+                isActive ? 'text-primary' : 'text-[#5f514b] hover:text-primary'
+              }`
+            }
+          >
+            <HeartIcon size={15} weight="bold" />
+            Solidário
+          </NavLink>
         </nav>
 
         {/* Área direita Desktop */}

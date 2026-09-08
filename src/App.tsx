@@ -12,6 +12,7 @@ import ProdutosSaudaveis from './pages/produtos/ProdutosSaudaveis'
 import ProtectedRoute from './routes/ProtectedRoute'
 import AdminRoute from './routes/AdminRoute'
 import Home from './pages/home/Home'
+import Solidario from './pages/solidario/Solidario'
 
 const INTRO_KEY =
   '@BOMbocado:intro'
@@ -57,6 +58,7 @@ function App() {
       <Route path="/home" element={<Home />} />
         <Route path="/produtos" element={<Produtos />} />
         <Route path="/produtos/saudaveis" element={<ProdutosSaudaveis />} />
+        <Route path="/solidario" element={<Solidario />} />
         <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
         <Route element={<AdminRoute />}>
           <Route path="/produtos/cadastrar" element={<FormProduto />} />
