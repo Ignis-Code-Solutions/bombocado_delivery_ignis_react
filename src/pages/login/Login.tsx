@@ -100,9 +100,12 @@ function Login() {
       setCarregando(true)
       setErro('')
 
-      await login(formLogin)
-
-      navigate('/home')
+     const usuarioAutenticado = await login(formLogin)
+      if (usuarioAutenticado.tipo === 'ADMIN') {
+        navigate('/admin')
+      } else {
+        navigate('/home')
+      }
     } catch (error) {
       console.error(error)
 
