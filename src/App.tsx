@@ -16,6 +16,7 @@ import Clientes from './admin/clientes/Clientes'
 import HomeAdmin from './admin/Home/HomeAdmin'
 import ProdutosAdmin from './admin/produtos/produtosadmin/ProdutosAdmin'
 import NavbarAdmin from './components/navbar/NavbarAdmin'
+import Cart from './components/carrinho/cart/Cart'
 
 const INTRO_KEY =
   '@BOMbocado:intro'
@@ -64,6 +65,7 @@ function App() {
           <Route path="/produtos" element={<Produtos />} />
           <Route path="/produtos/saudaveis" element={<ProdutosSaudaveis />} />
           <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
+          <Route path="/carrinho" element={<Cart />} />
         </Route>
 
           {/* Área do administrador */}
