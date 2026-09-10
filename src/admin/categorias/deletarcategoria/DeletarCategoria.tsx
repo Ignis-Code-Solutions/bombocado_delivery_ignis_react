@@ -1,6 +1,6 @@
-
 import { useState } from 'react'
 import { deletar } from '../../../services/Service'
+import { useAuth } from '../../../contexts/AuthContext'
 
 interface Categoria {
   id: number
@@ -24,6 +24,8 @@ function DeletarCategoria({
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
 
+  const { token } = useAuth()
+
   if (!aberto || !categoria) {
     return null
   }
@@ -33,7 +35,7 @@ function DeletarCategoria({
     setCarregando(true)
 
     try {
-      await deletar(`/categorias/${categoria.id}`)
+      await deletar(`/categorias/${categoria.id}`, token)
 
       atualizarCategorias()
       fechar()

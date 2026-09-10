@@ -1,6 +1,6 @@
-
 import { useEffect, useState } from 'react'
 import { buscar, cadastrar } from '../../../services/Service'
+import { useAuth } from '../../../contexts/AuthContext'
 
 interface Categoria {
   id: number
@@ -31,6 +31,7 @@ function ModalProduto({
   const [carregando, setCarregando] = useState(false)
   const [carregandoCategorias, setCarregandoCategorias] = useState(false)
   const [erro, setErro] = useState('')
+  const { token } = useAuth()
 
   useEffect(() => {
     if (!aberto) {
@@ -42,7 +43,7 @@ function ModalProduto({
       setErro('')
 
       try {
-        const resposta = await buscar<any>('/categorias')
+        const resposta = await buscar<any>('/categorias', token)
 
         if (Array.isArray(resposta)) {
           setCategorias(resposta)
@@ -85,7 +86,9 @@ function ModalProduto({
         categoria: {
           id: Number(categoria)
         }
-      })
+      },
+    token
+  )
 
       setNome('')
       setDescricao('')

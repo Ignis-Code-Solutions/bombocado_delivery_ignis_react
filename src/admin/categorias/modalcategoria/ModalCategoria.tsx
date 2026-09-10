@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { cadastrar } from '../../../services/Service'
+import { useAuth } from '../../../contexts/AuthContext'
 
 
 interface ModalCategoriaProps {
@@ -18,6 +19,8 @@ function ModalCategoria({
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
 
+  const { token } = useAuth()
+
   if (!aberto) {
     return null
   }
@@ -31,7 +34,9 @@ function ModalCategoria({
       await cadastrar('/categorias', {
         nome,
         descricao
-      })
+      },
+    token
+  )
 
       setNome('')
       setDescricao('')
