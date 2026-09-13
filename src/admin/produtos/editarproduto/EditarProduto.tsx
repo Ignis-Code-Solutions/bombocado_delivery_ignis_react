@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react'
-import { atualizar, buscar } from '../../../services/Service'
+
+import {
+  atualizar,
+  buscar,
+} from '../../../services/Service'
+
 import type Produto from '../../../models/Produto'
 import type Categoria from '../../../models/Categoria'
+
 import { useAuth } from '../../../contexts/AuthContext'
 
 interface EditarProdutoProps {
@@ -15,7 +21,7 @@ function EditarProduto({
   aberto,
   fechar,
   produto,
-  atualizarProdutos
+  atualizarProdutos,
 }: EditarProdutoProps) {
   const [nome, setNome] = useState('')
   const [descricao, setDescricao] = useState('')
@@ -25,64 +31,131 @@ function EditarProduto({
   const [nutriscore, setNutriscore] = useState('')
   const [dataValidade, setDataValidade] = useState('')
   const [categoria, setCategoria] = useState('')
-  const [categorias, setCategorias] = useState<Categoria[]>([])
-  const [carregando, setCarregando] = useState(false)
-  const [erro, setErro] = useState('')
+
+  const [categorias, setCategorias] =
+    useState<Categoria[]>([])
+
+  const [carregando, setCarregando] =
+    useState(false)
+
+  const [erro, setErro] =
+    useState('')
 
   const { token } = useAuth()
 
   useEffect(() => {
     if (produto) {
-      setNome(produto.nome)
-      setDescricao(produto.descricao)
-      setPreco(String(produto.preco))
-      setImagem(produto.imagem || '')
-      setTempoEntrega(
-        produto.tempoEntrega
-          ? String(produto.tempoEntrega)
-          : ''
+      setNome(
+        produto.nome ?? '',
       )
-      setNutriscore(produto.nutriscore || '')
+
+      setDescricao(
+        produto.descricao ?? '',
+      )
+
+      setPreco(
+        String(produto.preco ?? ''),
+      )
+
+      setImagem(
+        produto.imagem ?? '',
+      )
+
+      setTempoEntrega(
+        produto.tempoEntrega !== null &&
+        produto.tempoEntrega !== undefined
+          ? String(produto.tempoEntrega)
+          : '',
+      )
+
+      setNutriscore(
+        produto.nutriscore
+          ?.trim()
+          .toUpperCase() ?? '',
+      )
+
       setDataValidade(
         produto.dataValidade
           ? produto.dataValidade.substring(0, 10)
-          : ''
+          : '',
       )
+
       setCategoria(
-        produto.categoria
+        produto.categoria?.id
           ? String(produto.categoria.id)
-          : ''
+          : '',
       )
+
       setErro('')
     }
   }, [produto])
 
   useEffect(() => {
     if (aberto && token) {
-      buscar<any>('/categorias', token)
+      buscar<any>(
+        '/categorias',
+        token,
+      )
         .then((resposta) => {
-          if (Array.isArray(resposta)) {
-            setCategorias(resposta)
-          } else if (Array.isArray(resposta?.content)) {
-            setCategorias(resposta.content)
-          } else if (Array.isArray(resposta?.data)) {
-            setCategorias(resposta.data)
-          } else {
-            setCategorias([])
+          if (
+            Array.isArray(resposta)
+          ) {
+            setCategorias(
+              resposta,
+            )
+
+            return
           }
+
+          if (
+            Array.isArray(
+              resposta?.content,
+            )
+          ) {
+            setCategorias(
+              resposta.content,
+            )
+
+            return
+          }
+
+          if (
+            Array.isArray(
+              resposta?.data,
+            )
+          ) {
+            setCategorias(
+              resposta.data,
+            )
+
+            return
+          }
+
+          setCategorias([])
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error(
+            'Erro ao carregar categorias:',
+            error,
+          )
+
           setCategorias([])
         })
     }
-  }, [aberto, token])
+  }, [
+    aberto,
+    token,
+  ])
 
-  if (!aberto || !produto) {
+  if (
+    !aberto ||
+    !produto
+  ) {
     return null
   }
 
   const salvar = async (
-    event: React.FormEvent<HTMLFormElement>
+    event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault()
 
@@ -90,24 +163,51 @@ function EditarProduto({
     setCarregando(true)
 
     try {
+      const payload = {
+        id: produto.id,
+
+        nome:
+          nome.trim(),
+
+        descricao:
+          descricao.trim(),
+
+        preco:
+          Number(preco),
+
+        imagem:
+          imagem.trim(),
+
+        tempoEntrega:
+          tempoEntrega
+            ? Number(
+                tempoEntrega,
+              )
+            : null,
+
+        nutriscore:
+          nutriscore
+            .trim()
+            .toUpperCase(),
+
+        dataValidade,
+
+        categoria: {
+          id: Number(
+            categoria,
+          ),
+        },
+      }
+
+      console.log(
+        'Payload enviado:',
+        payload,
+      )
+
       await atualizar(
         '/produtos',
-        {
-          id: produto.id,
-          nome,
-          descricao,
-          preco: Number(preco),
-          imagem,
-          tempoEntrega: tempoEntrega
-            ? Number(tempoEntrega)
-            : null,
-          nutriscore: nutriscore || null,
-          dataValidade,
-          categoria: {
-            id: Number(categoria)
-          }
-        },
-        token
+        payload,
+        token,
       )
 
       atualizarProdutos()
@@ -115,12 +215,17 @@ function EditarProduto({
     } catch (error: any) {
       console.error(
         'Erro ao atualizar produto:',
-        error
+        error,
+      )
+
+      console.error(
+        'Resposta da API:',
+        error?.response?.data,
       )
 
       setErro(
         error?.response?.data?.message ||
-        'Não foi possível atualizar o produto.'
+          'Não foi possível atualizar o produto.',
       )
     } finally {
       setCarregando(false)
@@ -158,7 +263,11 @@ function EditarProduto({
             <input
               type="text"
               value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              onChange={(event) =>
+                setNome(
+                  event.target.value,
+                )
+              }
               className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
               required
             />
@@ -171,7 +280,11 @@ function EditarProduto({
 
             <textarea
               value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
+              onChange={(event) =>
+                setDescricao(
+                  event.target.value,
+                )
+              }
               className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
               rows={3}
               required
@@ -189,7 +302,11 @@ function EditarProduto({
                 type="number"
                 step="0.01"
                 value={preco}
-                onChange={(e) => setPreco(e.target.value)}
+                onChange={(event) =>
+                  setPreco(
+                    event.target.value,
+                  )
+                }
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
                 required
               />
@@ -202,9 +319,12 @@ function EditarProduto({
 
               <input
                 type="number"
+                min="1"
                 value={tempoEntrega}
-                onChange={(e) =>
-                  setTempoEntrega(e.target.value)
+                onChange={(event) =>
+                  setTempoEntrega(
+                    event.target.value,
+                  )
                 }
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
               />
@@ -220,7 +340,11 @@ function EditarProduto({
             <input
               type="text"
               value={imagem}
-              onChange={(e) => setImagem(e.target.value)}
+              onChange={(event) =>
+                setImagem(
+                  event.target.value,
+                )
+              }
               className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
               required
             />
@@ -233,14 +357,39 @@ function EditarProduto({
                 Nutriscore
               </label>
 
-              <input
-                type="text"
+              <select
                 value={nutriscore}
-                onChange={(e) =>
-                  setNutriscore(e.target.value)
+                onChange={(event) =>
+                  setNutriscore(
+                    event.target.value,
+                  )
                 }
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
-              />
+              >
+                <option value="">
+                  Não informado
+                </option>
+
+                <option value="A">
+                  A
+                </option>
+
+                <option value="B">
+                  B
+                </option>
+
+                <option value="C">
+                  C
+                </option>
+
+                <option value="D">
+                  D
+                </option>
+
+                <option value="E">
+                  E
+                </option>
+              </select>
             </div>
 
             <div>
@@ -251,8 +400,10 @@ function EditarProduto({
               <input
                 type="date"
                 value={dataValidade}
-                onChange={(e) =>
-                  setDataValidade(e.target.value)
+                onChange={(event) =>
+                  setDataValidade(
+                    event.target.value,
+                  )
                 }
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
                 required
@@ -266,8 +417,10 @@ function EditarProduto({
 
               <select
                 value={categoria}
-                onChange={(e) =>
-                  setCategoria(e.target.value)
+                onChange={(event) =>
+                  setCategoria(
+                    event.target.value,
+                  )
                 }
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
                 required
@@ -276,14 +429,16 @@ function EditarProduto({
                   Selecione
                 </option>
 
-                {categorias.map((item) => (
-                  <option
-                    key={item.id}
-                    value={item.id}
-                  >
-                    {item.nome}
-                  </option>
-                ))}
+                {categorias.map(
+                  (item) => (
+                    <option
+                      key={item.id}
+                      value={item.id}
+                    >
+                      {item.nome}
+                    </option>
+                  ),
+                )}
               </select>
             </div>
 

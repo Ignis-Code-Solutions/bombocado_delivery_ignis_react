@@ -171,7 +171,7 @@ function Home() {
       <section className="mx-auto hidden max-w-7xl px-4 pt-6 sm:px-6 lg:block lg:px-8">
         <div className="overflow-hidden rounded-[28px] bg-surface-low shadow-card">
 
-          <div className="grid min-h-[380px] grid-cols-12">
+          <div className="grid min-h-95 grid-cols-12">
 
             {/* Texto */}
             <div className="col-span-7 flex flex-col justify-center p-8 xl:p-10">
@@ -290,7 +290,7 @@ function Home() {
                 className="h-full w-full object-cover"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-r from-surface-low via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-r from-surface-low via-transparent to-transparent" />
 
               <div className="absolute bottom-6 right-6 rounded-2xl bg-white/90 p-4 shadow-card backdrop-blur">
 
@@ -319,16 +319,16 @@ function Home() {
       <section className="px-4 pt-4 lg:hidden">
 
         <div
-          className="relative min-h-[230px] overflow-hidden rounded-2xl bg-cover bg-center p-5 shadow-card"
+          className="relative min-h-57.5 overflow-hidden rounded-2xl bg-cover bg-center p-5 shadow-card"
           style={{
             backgroundImage:
               `url(${IMAGEM_HERO})`,
           }}
         >
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/5" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/35 to-black/5" />
 
-          <div className="relative z-10 flex min-h-[190px] flex-col justify-end">
+          <div className="relative z-10 flex min-h-47.5 flex-col justify-end">
 
             <span className="mb-2 w-fit rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
               Destaques de hoje
@@ -418,7 +418,7 @@ function Home() {
 
           <Link
             to="/produtos?busca=Lanches"
-            className="flex min-w-[105px] flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
+            className="flex min-w-26.25 flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
           >
             <span className="text-3xl">
               🥖
@@ -431,7 +431,7 @@ function Home() {
 
           <Link
             to="/produtos?busca=Refeição"
-            className="flex min-w-[105px] flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
+            className="flex min-w-26.25 flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
           >
             <span className="text-3xl">
               🥗
@@ -444,7 +444,7 @@ function Home() {
 
           <Link
             to="/produtos/saudaveis"
-            className="flex min-w-[105px] flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
+            className="flex min-w-26.25 flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
           >
             <span className="text-3xl">
               🥑
@@ -457,7 +457,7 @@ function Home() {
 
           <Link
             to="/produtos?busca=Sobremesas"
-            className="flex min-w-[105px] flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
+            className="flex min-w-26.25 flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
           >
             <span className="text-3xl">
               🍰
@@ -470,7 +470,7 @@ function Home() {
 
           <Link
             to="/produtos?busca=Bebidas"
-            className="flex min-w-[105px] flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
+            className="flex min-w-26.25 flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
           >
             <span className="text-3xl">
               ☕

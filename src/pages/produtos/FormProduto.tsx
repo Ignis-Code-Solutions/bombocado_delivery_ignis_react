@@ -1,11 +1,33 @@
-import { ArrowLeftIcon, ClockIcon, FloppyDiskIcon, ImageIcon, PackageIcon, TagIcon, WarningCircleIcon,
+import {
+  ArrowLeftIcon,
+  ClockIcon,
+  FloppyDiskIcon,
+  ImageIcon,
+  PackageIcon,
+  TagIcon,
+  WarningCircleIcon,
 } from '@phosphor-icons/react'
+
 import axios from 'axios'
-import { type ChangeEvent, type FormEvent, useEffect, useState, } from 'react'
-import { Link, useNavigate, useParams, } from 'react-router-dom'
+
+import {
+  type ChangeEvent,
+  type FormEvent,
+  useEffect,
+  useState,
+} from 'react'
+
+import {
+  Link,
+  useNavigate,
+  useParams,
+} from 'react-router-dom'
+
 import { useAuth } from '../../contexts/AuthContext'
+
 import type Categoria from '../../models/Categoria'
 import type Produto from '../../models/Produto'
+
 import {
   atualizar,
   buscar,
@@ -20,6 +42,7 @@ interface FormProdutoState {
   tempoEntrega: string
   dataValidade: string
   categoriaId: string
+  nutriscore: string
 }
 
 const estadoInicial: FormProdutoState = {
@@ -30,6 +53,7 @@ const estadoInicial: FormProdutoState = {
   tempoEntrega: '',
   dataValidade: '',
   categoriaId: '',
+  nutriscore: '',
 }
 
 function FormProduto() {
@@ -88,23 +112,32 @@ function FormProduto() {
 
           setFormProduto({
             nome: produtoResposta.nome ?? '',
+
             descricao:
               produtoResposta.descricao ?? '',
+
             preco:
               produtoResposta.preco?.toString() ??
               '',
+
             imagem:
               produtoResposta.imagem ?? '',
+
             tempoEntrega:
               produtoResposta.tempoEntrega !== null
                 ? produtoResposta.tempoEntrega.toString()
                 : '',
+
             dataValidade:
               produtoResposta.dataValidade ?? '',
+
             categoriaId:
               produtoResposta.categoria?.id
                 ? produtoResposta.categoria.id.toString()
                 : '',
+
+            nutriscore:
+              produtoResposta.nutriscore ?? '',
           })
         }
       } catch (error) {
@@ -165,9 +198,9 @@ function FormProduto() {
 
   function atualizarEstado(
     event: ChangeEvent<
-      HTMLInputElement |
-      HTMLTextAreaElement |
-      HTMLSelectElement
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | HTMLSelectElement
     >,
   ) {
     const { name, value } = event.target
@@ -252,7 +285,8 @@ function FormProduto() {
         id: Number(id),
       }),
 
-      nome: formProduto.nome.trim(),
+      nome:
+        formProduto.nome.trim(),
 
       descricao:
         formProduto.descricao.trim(),
@@ -272,6 +306,9 @@ function FormProduto() {
 
       dataValidade:
         formProduto.dataValidade,
+
+      nutriscore:
+        formProduto.nutriscore.trim(),
 
       categoria: {
         id: Number(
@@ -598,6 +635,52 @@ function FormProduto() {
                   ),
                 )}
               </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="nutriscore"
+                className="mb-2 block text-sm font-semibold"
+              >
+                Nutri-Score
+              </label>
+
+              <select
+                id="nutriscore"
+                name="nutriscore"
+                value={formProduto.nutriscore}
+                onChange={atualizarEstado}
+                disabled={salvando}
+                className="h-12 w-full rounded-button border border-outline bg-white px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
+              >
+                <option value="">
+                  Não informado
+                </option>
+
+                <option value="A">
+                  A
+                </option>
+
+                <option value="B">
+                  B
+                </option>
+
+                <option value="C">
+                  C
+                </option>
+
+                <option value="D">
+                  D
+                </option>
+
+                <option value="E">
+                  E
+                </option>
+              </select>
+
+              <p className="mt-1 text-xs text-ink-muted">
+                Selecione a classificação nutricional do produto.
+              </p>
             </div>
 
             <div>
