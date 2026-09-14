@@ -12,6 +12,7 @@ import ProdutoDetalhe from './pages/produtos/ProdutoDetalhe'
 import Produtos from './pages/produtos/Produtos'
 import ProdutosSaudaveis from './pages/produtos/ProdutosSaudaveis'
 import SobreNos from './pages/sobrenos/SobreNos'
+import Solidaria from './pages/solidaria/Solidaria'
 
 import ProtectedRoute from './routes/ProtectedRoute'
 import AdminRoute from './routes/AdminRoute'
@@ -70,6 +71,11 @@ function App() {
         <Route
           path="/sobre-nos"
           element={<SobreNos />}
+        />
+
+        <Route
+          path="/solidaria"
+          element={<Solidaria />}
         />
 
         <Route
