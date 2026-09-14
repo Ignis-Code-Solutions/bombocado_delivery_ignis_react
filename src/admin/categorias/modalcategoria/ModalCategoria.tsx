@@ -19,6 +19,7 @@ function ModalCategoria({
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
 
+
   if (!aberto) {
     return null
   }

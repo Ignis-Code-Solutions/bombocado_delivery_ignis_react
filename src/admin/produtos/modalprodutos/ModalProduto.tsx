@@ -32,7 +32,7 @@ function ModalProduto({
   const [carregando, setCarregando] = useState(false)
   const [carregandoCategorias, setCarregandoCategorias] = useState(false)
   const [erro, setErro] = useState('')
-
+  
   useEffect(() => {
     if (!aberto) {
       return

@@ -25,6 +25,7 @@ function DeletarCategoria({
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
 
+
   if (!aberto || !categoria) {
     return null
   }

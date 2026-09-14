@@ -1,5 +1,8 @@
 import {
+<<<<<<< HEAD
   HandHeartIcon,
+=======
+>>>>>>> nome-da-branch
   InfoIcon,
   LeafIcon,
   ListIcon,
@@ -8,6 +11,7 @@ import {
   ShoppingCartIcon,
   SignOutIcon,
   UserIcon,
+  HandHeartIcon,
   XIcon,
 } from '@phosphor-icons/react'
 
@@ -25,6 +29,7 @@ function Navbar() {
   const navigate = useNavigate()
   const { usuario, logout } = useAuth()
   const { quantidadeItems } = useContext(CartContext)
+
   const isAdmin = usuario?.tipo?.toUpperCase() === 'ADMIN'
 
   const [menuAberto, setMenuAberto] = useState(false)
@@ -43,7 +48,7 @@ function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#f0e4df] bg-white">
-      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-17 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
         {/* Logo */}
         <Link
@@ -76,7 +81,6 @@ function Navbar() {
               }`
             }
           >
-          
             Início
           </NavLink>
 
@@ -140,8 +144,6 @@ function Navbar() {
         {/* Área direita Desktop */}
         <div className="hidden items-center gap-2 lg:flex">
 
-          
-
           {/* Usuário */}
           <div className="mr-1 flex items-center gap-2">
 
@@ -166,23 +168,23 @@ function Navbar() {
               </p>
             </div>
 
-{/* Carrinho */}
-          <Link
-            to="/carrinho"
-            aria-label="Ver carrinho"
-            className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-[#eadbd5] bg-white text-[#5f514b] transition hover:border-primary hover:text-primary"
-          >
-            <ShoppingCartIcon
-              size={17}
-              weight="bold"
-            />
+            {/* Carrinho */}
+            <Link
+              to="/carrinho"
+              aria-label="Ver carrinho"
+              className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-[#eadbd5] bg-white text-[#5f514b] transition hover:border-primary hover:text-primary"
+            >
+              <ShoppingCartIcon
+                size={17}
+                weight="bold"
+              />
 
-            {quantidadeItems > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
-                {quantidadeItems}
-              </span>
-            )}
-          </Link>
+              {quantidadeItems > 0 && (
+                <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
+                  {quantidadeItems}
+                </span>
+              )}
+            </Link>
           </div>
 
           {/* Sair */}
@@ -251,9 +253,12 @@ function Navbar() {
 
           <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
 
-            {/* Usuário */}
-            <div className="mb-3 flex items-center gap-3 rounded-xl bg-[#fff8f5] p-3">
-
+            {/* Usuário / Perfil */}
+            <Link
+              to="/perfil"
+              onClick={fecharMenu}
+              className="mb-3 flex items-center gap-3 rounded-xl bg-[#fff8f5] p-3 transition hover:bg[#fff1ec]"
+            >
               <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary-soft text-primary">
                 {usuario?.imagem ? (
                   <img
@@ -280,8 +285,7 @@ function Navbar() {
                   </p>
                 )}
               </div>
-
-            </div>
+            </Link>
 
             <nav className="flex flex-col gap-1">
 
@@ -398,6 +402,7 @@ function Navbar() {
                 />
 
                 Carrinho
+
                 {quantidadeItems > 0 && (
                   <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-bold text-white">
                     {quantidadeItems}
