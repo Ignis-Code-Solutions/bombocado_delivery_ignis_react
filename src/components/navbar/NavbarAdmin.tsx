@@ -1,64 +1,445 @@
-import {HouseIcon, PackageIcon, TagIcon, UsersThreeIcon} from "@phosphor-icons/react";
-import { NavLink } from "react-router-dom";
+import {
+  HandHeartIcon,
+  InfoIcon,
+  LeafIcon,
+  ListIcon,
+  PackageIcon,
+  PlusIcon,
+  ShoppingCartIcon,
+  SignOutIcon,
+  UserIcon,
+  XIcon,
+} from '@phosphor-icons/react'
 
-export default function NavbarAdmin() {
-  const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition ${
-      isActive
-        ? "bg-orange-500 text-white"
-        : "text-stone-600 hover:bg-orange-50 hover:text-orange-600"
-    }`;
+import { useContext, useState } from 'react'
+import {
+  Link,
+  NavLink,
+  useNavigate,
+} from 'react-router-dom'
+
+import { useAuth } from '../../contexts/AuthContext'
+import { CartContext } from '../../contexts/CartContext'
+
+function Navbar() {
+  const navigate = useNavigate()
+  const { usuario, logout } = useAuth()
+  const { quantidadeItems } = useContext(CartContext)
+  const isAdmin = usuario?.tipo?.toUpperCase() === 'ADMIN'
+
+  const [menuAberto, setMenuAberto] = useState(false)
+
+  function sair() {
+    logout()
+
+    navigate('/login', {
+      replace: true,
+    })
+  }
+
+  function fecharMenu() {
+    setMenuAberto(false)
+  }
 
   return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-70 flex-col border-r border-zinc-200 bg-white px-4 py-5">
-      <div className="mb-7 flex items-center gap-3 px-1">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500">
-          <PackageIcon size={24} weight="regular" color="white" />
+    <header className="sticky top-0 z-50 border-b border-[#f0e4df] bg-white">
+      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+
+        {/* Logo */}
+        <Link
+          to="/home"
+          onClick={fecharMenu}
+          className="flex shrink-0 items-center gap-2"
+        >
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-soft">
+            <img src="/content.png" alt="" />
+          </div>
+
+          <span className="font-headline text-xl font-extrabold tracking-tight text-[#291a14]">
+            BOM
+            <span className="text-primary">
+              bocado
+            </span>
+          </span>
+        </Link>
+
+        {/* Navegação Desktop */}
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex">
+
+          <NavLink
+            to="/home"
+            className={({ isActive }) =>
+              `text-[13px] font-semibold transition ${
+                isActive
+                  ? 'text-primary'
+                  : 'text-[#5f514b] hover:text-primary'
+              }`
+            }
+          >
+          
+            Início
+          </NavLink>
+
+          <NavLink
+            to="/produtos"
+            end
+            className={({ isActive }) =>
+              `flex items-center gap-1.5 text-[13px] font-semibold transition ${
+                isActive
+                  ? 'text-primary'
+                  : 'text-[#5f514b] hover:text-primary'
+              }`
+            }
+          >
+            <PackageIcon
+              size={15}
+              weight="bold"
+            />
+
+            Produtos
+          </NavLink>
+
+          <NavLink
+            to="/solidaria"
+            className={({ isActive }) =>
+              `flex items-center gap-1.5 text-[13px] font-semibold transition ${
+                isActive
+                  ? 'text-primary'
+                  : 'text-[#5f514b] hover:text-primary'
+              }`
+            }
+          >
+            <HandHeartIcon
+              size={15}
+              weight="bold"
+            />
+
+            Solidária
+          </NavLink>
+
+          <NavLink
+            to="/sobre-nos"
+            className={({ isActive }) =>
+              `flex items-center gap-1.5 text-[13px] font-semibold transition ${
+                isActive
+                  ? 'text-primary'
+                  : 'text-[#5f514b] hover:text-primary'
+              }`
+            }
+          >
+            <InfoIcon
+              size={15}
+              weight="bold"
+            />
+
+            Sobre nós
+          </NavLink>
+
+        </nav>
+
+        {/* Área direita Desktop */}
+        <div className="hidden items-center gap-2 lg:flex">
+
+          
+
+          {/* Usuário */}
+          <div className="mr-1 flex items-center gap-2">
+
+            <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-primary-soft text-primary">
+              {usuario?.imagem ? (
+                <img
+                  src={usuario.imagem}
+                  alt={usuario.nome}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <UserIcon
+                  size={16}
+                  weight="bold"
+                />
+              )}
+            </div>
+
+            <div className="hidden xl:block">
+              <p className="max-w-24 truncate text-xs font-bold text-[#291a14]">
+                {usuario?.nome || 'Usuário'}
+              </p>
+            </div>
+
+{/* Carrinho */}
+          <Link
+            to="/carrinho"
+            aria-label="Ver carrinho"
+            className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-[#eadbd5] bg-white text-[#5f514b] transition hover:border-primary hover:text-primary"
+          >
+            <ShoppingCartIcon
+              size={17}
+              weight="bold"
+            />
+
+            {quantidadeItems > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
+                {quantidadeItems}
+              </span>
+            )}
+          </Link>
+          </div>
+
+          {/* Sair */}
+          <button
+            type="button"
+            onClick={sair}
+            className="flex h-9 items-center gap-1.5 rounded-lg border border-[#eadbd5] bg-white px-3 text-xs font-semibold text-[#5f514b] transition hover:border-primary hover:text-primary"
+          >
+            <SignOutIcon
+              size={15}
+              weight="bold"
+            />
+
+            Sair
+          </button>
+
+          {/* CTA */}
+          {isAdmin && (
+            <Link
+              to="/produtos/cadastrar"
+              className="flex h-9 items-center gap-1.5 rounded-lg bg-primary px-4 text-xs font-bold text-white shadow-sm transition hover:brightness-95"
+            >
+              <PlusIcon
+                size={15}
+                weight="bold"
+              />
+
+              Cadastrar
+            </Link>
+          )}
+
         </div>
 
-        <div>
-          <h1 className="text-[16px] font-extrabold tracking-tight text-zinc-800">
-            BOMbocado
-          </h1>
+        {/* Botão Mobile */}
+        <button
+          type="button"
+          onClick={() =>
+            setMenuAberto((menu) => !menu)
+          }
+          aria-label={
+            menuAberto
+              ? 'Fechar menu'
+              : 'Abrir menu'
+          }
+          aria-expanded={menuAberto}
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#eadbd5] text-[#291a14] lg:hidden"
+        >
+          {menuAberto ? (
+            <XIcon
+              size={21}
+              weight="bold"
+            />
+          ) : (
+            <ListIcon
+              size={21}
+              weight="bold"
+            />
+          )}
+        </button>
 
-          <p className="mt-0.5 text-[9px] font-bold tracking-[0.08em] text-stone-500">
-            ADMINISTRADOR
-          </p>
-        </div>
       </div>
 
-      <nav className="flex flex-col gap-1.5">
-        <NavLink to="/admin" end className={linkClass}>
-          <HouseIcon size={20} weight="regular" />
-          <span>Dashboard</span>
-        </NavLink>
+      {/* Menu Mobile */}
+      {menuAberto && (
+        <div className="border-t border-[#f0e4df] bg-white lg:hidden">
 
-        <NavLink to="/admin/produtos" className={linkClass}>
-          <PackageIcon size={20} weight="regular" />
-          <span>Produtos</span>
-        </NavLink>
+          <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
 
-        <NavLink to="/admin/categorias" className={linkClass}>
-          <TagIcon size={20} weight="regular" />
-          <span>Categorias</span>
-        </NavLink>
+            {/* Usuário */}
+            <div className="mb-3 flex items-center gap-3 rounded-xl bg-[#fff8f5] p-3">
 
-        <NavLink to="/admin/clientes" className={linkClass}>
-      <UsersThreeIcon size={20} weight="regular" />
-      <span>Clientes</span>
-    </NavLink>
-  </nav>
+              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary-soft text-primary">
+                {usuario?.imagem ? (
+                  <img
+                    src={usuario.imagem}
+                    alt={usuario.nome}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <UserIcon
+                    size={19}
+                    weight="bold"
+                  />
+                )}
+              </div>
 
+              <div>
+                <p className="text-sm font-bold text-[#291a14]">
+                  {usuario?.nome || 'Usuário'}
+                </p>
 
-  <div className="mt-auto border-t border-zinc-100 pt-4 text-center">
-    <img className="w-30 p-2 mx-auto" src="./content.png" alt="" />
-     <p className="text-xs font-medium text-stone-400">
-      Bombocado Delivery de Alimentos
-    </p>
-    <p className="text-xs font-medium text-stone-400">
-      Copyright © Ignis Code Solutions | 2026
-    </p>
-  </div>
-    </aside>
-  );
+                {usuario?.tipo && (
+                  <p className="text-xs text-[#8a7770]">
+                    {usuario.tipo}
+                  </p>
+                )}
+              </div>
+
+            </div>
+
+            <nav className="flex flex-col gap-1">
+
+              <NavLink
+                to="/home"
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-primary-soft text-primary'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
+                  }`
+                }
+              >
+                <LeafIcon
+                  size={19}
+                  weight="bold"
+                />
+
+                Início
+              </NavLink>
+
+              <NavLink
+                to="/produtos"
+                end
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-primary-soft text-primary'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
+                  }`
+                }
+              >
+                <PackageIcon
+                  size={19}
+                  weight="bold"
+                />
+
+                Produtos
+              </NavLink>
+
+              <NavLink
+                to="/produtos/saudaveis"
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-primary-soft text-primary'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
+                  }`
+                }
+              >
+                <LeafIcon
+                  size={19}
+                  weight="bold"
+                />
+
+                Opções saudáveis
+              </NavLink>
+
+              <NavLink
+                to="/solidaria"
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-primary-soft text-primary'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
+                  }`
+                }
+              >
+                <HandHeartIcon
+                  size={19}
+                  weight="bold"
+                />
+
+                Solidária
+              </NavLink>
+
+              <NavLink
+                to="/sobre-nos"
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-primary-soft text-primary'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
+                  }`
+                }
+              >
+                <InfoIcon
+                  size={19}
+                  weight="bold"
+                />
+
+                Sobre nós
+              </NavLink>
+
+              <NavLink
+                to="/carrinho"
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-primary-soft text-primary'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
+                  }`
+                }
+              >
+                <ShoppingCartIcon
+                  size={19}
+                  weight="bold"
+                />
+
+                Carrinho
+                {quantidadeItems > 0 && (
+                  <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-bold text-white">
+                    {quantidadeItems}
+                  </span>
+                )}
+              </NavLink>
+
+              {isAdmin && (
+                <Link
+                  to="/produtos/cadastrar"
+                  onClick={fecharMenu}
+                  className="flex h-9 items-center gap-1.5 rounded-lg bg-primary px-4 text-xs font-bold text-white shadow-sm transition hover:brightness-95"
+                >
+                  <PlusIcon
+                    size={15}
+                    weight="bold"
+                  />
+
+                  Cadastrar
+                </Link>
+              )}
+
+              <button
+                type="button"
+                onClick={sair}
+                className="mt-1 flex items-center justify-center gap-2 rounded-lg border border-[#eadbd5] px-4 py-3 text-sm font-semibold text-[#5f514b]"
+              >
+                <SignOutIcon
+                  size={18}
+                  weight="bold"
+                />
+
+                Sair
+              </button>
+
+            </nav>
+
+          </div>
+        </div>
+      )}
+    </header>
+  )
 }
+
+export default Navbar

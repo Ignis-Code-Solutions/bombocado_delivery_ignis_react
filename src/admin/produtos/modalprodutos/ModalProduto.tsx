@@ -1,6 +1,6 @@
-
 import { useEffect, useState } from 'react'
 import { buscar, cadastrar } from '../../../services/Service'
+import { useAuth } from '../../../contexts/AuthContext'
 
 interface Categoria {
   id: number
@@ -19,6 +19,7 @@ function ModalProduto({
   fechar,
   atualizarProdutos
 }: ModalProdutoProps) {
+  const { usuario } = useAuth()
   const [nome, setNome] = useState('')
   const [descricao, setDescricao] = useState('')
   const [preco, setPreco] = useState('')
@@ -37,12 +38,16 @@ function ModalProduto({
       return
     }
 
+    if (!usuario) {
+      return
+    }
+
     const carregarCategorias = async () => {
       setCarregandoCategorias(true)
       setErro('')
 
       try {
-        const resposta = await buscar<any>('/categorias')
+        const resposta = await buscar<any>('/categorias', usuario.token)
 
         if (Array.isArray(resposta)) {
           setCategorias(resposta)
@@ -62,7 +67,7 @@ function ModalProduto({
     }
 
     carregarCategorias()
-  }, [aberto])
+  }, [aberto, usuario])
 
   if (!aberto) {
     return null
@@ -70,22 +75,31 @@ function ModalProduto({
 
   const salvar = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    if (!usuario) {
+      return
+    }
+
     setErro('')
     setCarregando(true)
 
     try {
-      await cadastrar('/produtos', {
-        nome,
-        descricao,
-        preco: Number(preco),
-        imagem,
-        tempoEntrega: tempoEntrega ? Number(tempoEntrega) : null,
-        nutriscore: nutriscore || null,
-        dataValidade,
-        categoria: {
-          id: Number(categoria)
-        }
-      })
+      await cadastrar(
+        '/produtos',
+        {
+          nome,
+          descricao,
+          preco: Number(preco),
+          imagem,
+          tempoEntrega: tempoEntrega ? Number(tempoEntrega) : null,
+          nutriscore: nutriscore || null,
+          dataValidade,
+          categoria: {
+            id: Number(categoria)
+          }
+        },
+        usuario.token
+      )
 
       setNome('')
       setDescricao('')

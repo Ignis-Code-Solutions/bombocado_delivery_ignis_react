@@ -1,6 +1,5 @@
 import {
   HandHeartIcon,
-  HouseIcon,
   InfoIcon,
   LeafIcon,
   ListIcon,
