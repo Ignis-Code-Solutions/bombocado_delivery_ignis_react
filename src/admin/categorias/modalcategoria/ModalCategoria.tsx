@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { cadastrar } from '../../../services/Service'
 import { useAuth } from '../../../contexts/AuthContext'
 
-
 interface ModalCategoriaProps {
   aberto: boolean
   fechar: () => void
@@ -14,12 +13,12 @@ function ModalCategoria({
   fechar,
   atualizarCategorias
 }: ModalCategoriaProps) {
+  const { usuario } = useAuth()
   const [nome, setNome] = useState('')
   const [descricao, setDescricao] = useState('')
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
 
-  const { token } = useAuth()
 
   if (!aberto) {
     return null
@@ -27,16 +26,23 @@ function ModalCategoria({
 
   const salvar = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    if (!usuario) {
+      return
+    }
+
     setErro('')
     setCarregando(true)
 
     try {
-      await cadastrar('/categorias', {
-        nome,
-        descricao
-      },
-    token
-  )
+      await cadastrar(
+        '/categorias',
+        {
+          nome,
+          descricao
+        },
+        usuario.token
+      )
 
       setNome('')
       setDescricao('')

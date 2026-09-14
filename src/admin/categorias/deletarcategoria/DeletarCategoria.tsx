@@ -21,21 +21,25 @@ function DeletarCategoria({
   categoria,
   atualizarCategorias
 }: DeletarCategoriaProps) {
+  const { usuario } = useAuth()
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
 
-  const { token } = useAuth()
 
   if (!aberto || !categoria) {
     return null
   }
 
   const confirmarExclusao = async () => {
+    if (!usuario) {
+      return
+    }
+
     setErro('')
     setCarregando(true)
 
     try {
-      await deletar(`/categorias/${categoria.id}`, token)
+      await deletar(`/categorias/${categoria.id}`, usuario.token)
 
       atualizarCategorias()
       fechar()

@@ -7,6 +7,7 @@ import {
   ShoppingCartIcon,
   SignOutIcon,
   UserIcon,
+  HandHeartIcon,
   XIcon,
 } from '@phosphor-icons/react'
 
@@ -96,6 +97,24 @@ function Navbar() {
             />
 
             Produtos
+          </NavLink>
+
+          <NavLink
+            to="/solidaria"
+            className={({ isActive }) =>
+              `flex items-center gap-1.5 text-[13px] font-semibold transition ${
+                isActive
+                  ? 'text-primary'
+                  : 'text-[#5f514b] hover:text-primary'
+              }`
+            }
+          >
+            <HandHeartIcon
+              size={15}
+              weight="bold"
+            />
+
+            Solidária
           </NavLink>
 
           <NavLink
@@ -322,6 +341,25 @@ function Navbar() {
                 />
 
                 Opções saudáveis
+              </NavLink>
+
+              <NavLink
+                to="/solidaria"
+                onClick={fecharMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-primary-soft text-primary'
+                      : 'text-[#5f514b] hover:bg-[#fff8f5]'
+                  }`
+                }
+              >
+                <HandHeartIcon
+                  size={19}
+                  weight="bold"
+                />
+
+                Solidária
               </NavLink>
 
               <NavLink

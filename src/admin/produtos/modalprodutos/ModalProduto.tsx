@@ -19,6 +19,7 @@ function ModalProduto({
   fechar,
   atualizarProdutos
 }: ModalProdutoProps) {
+  const { usuario } = useAuth()
   const [nome, setNome] = useState('')
   const [descricao, setDescricao] = useState('')
   const [preco, setPreco] = useState('')
@@ -31,10 +32,13 @@ function ModalProduto({
   const [carregando, setCarregando] = useState(false)
   const [carregandoCategorias, setCarregandoCategorias] = useState(false)
   const [erro, setErro] = useState('')
-  const { token } = useAuth()
-
+  
   useEffect(() => {
     if (!aberto) {
+      return
+    }
+
+    if (!usuario) {
       return
     }
 
@@ -43,7 +47,7 @@ function ModalProduto({
       setErro('')
 
       try {
-        const resposta = await buscar<any>('/categorias', token)
+        const resposta = await buscar<any>('/categorias', usuario.token)
 
         if (Array.isArray(resposta)) {
           setCategorias(resposta)
@@ -63,7 +67,7 @@ function ModalProduto({
     }
 
     carregarCategorias()
-  }, [aberto])
+  }, [aberto, usuario])
 
   if (!aberto) {
     return null
@@ -71,24 +75,31 @@ function ModalProduto({
 
   const salvar = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    if (!usuario) {
+      return
+    }
+
     setErro('')
     setCarregando(true)
 
     try {
-      await cadastrar('/produtos', {
-        nome,
-        descricao,
-        preco: Number(preco),
-        imagem,
-        tempoEntrega: tempoEntrega ? Number(tempoEntrega) : null,
-        nutriscore: nutriscore || null,
-        dataValidade,
-        categoria: {
-          id: Number(categoria)
-        }
-      },
-    token
-  )
+      await cadastrar(
+        '/produtos',
+        {
+          nome,
+          descricao,
+          preco: Number(preco),
+          imagem,
+          tempoEntrega: tempoEntrega ? Number(tempoEntrega) : null,
+          nutriscore: nutriscore || null,
+          dataValidade,
+          categoria: {
+            id: Number(categoria)
+          }
+        },
+        usuario.token
+      )
 
       setNome('')
       setDescricao('')
