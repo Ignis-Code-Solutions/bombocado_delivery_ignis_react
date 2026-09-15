@@ -1,8 +1,4 @@
 import {
-<<<<<<< HEAD
-  HandHeartIcon,
-=======
->>>>>>> nome-da-branch
   InfoIcon,
   LeafIcon,
   ListIcon,
