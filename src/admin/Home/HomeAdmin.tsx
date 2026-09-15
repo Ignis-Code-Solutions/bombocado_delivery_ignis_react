@@ -77,8 +77,8 @@ function HomeAdmin() {
   }
 
   return (
-    <main className="ml-52 min-h-screen bg-[#fff8f5] px-8 py-8">
-      <div className="w-full">
+   <main className="min-h-screen bg-[#fff8f5] px-6 py-8 md:px-10 lg:px-14">
+      <div className="mx-auto max-w-7xl">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-orange-600">
